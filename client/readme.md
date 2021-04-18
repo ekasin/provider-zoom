@@ -1,6 +1,6 @@
 # Client tesing
 
-This folder contains two files <strong>clint.go</strong> and <strong>client_test.go</strong>
+This folder contains two files <strong>client.go</strong> and <strong>client_test.go</strong>
 
 ### Client.go
 
