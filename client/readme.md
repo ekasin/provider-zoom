@@ -4,7 +4,7 @@ This folder contains two files <strong>client.go</strong> and <strong>client_tes
 
 ### Client.go
 
-    This is client library file of zoom api which contains all the functions to call all the four methods i.e CRUD
+    This is client library file of zoom api which contains all the functions to call all the four methods ie. CRUD
 
 ### Client_test.go
 
