@@ -94,15 +94,7 @@ func (c *Client) gethttpRequest(path, method string, body bytes.Buffer) (closer 
 	fmt.Println("statuscode",resp.StatusCode)
 	
 
-	/*
-	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
-        fmt.Println("HTTP Status is in the 2xx range")
-		return resp.Body, nil
-    } else {
-        fmt.Println("Argh! Broken")
-		return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
-    }
-	*/
+	
 
 
 	
@@ -186,16 +178,7 @@ func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *
 		return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
     }
 
-	/*
-	if resp.StatusCode != http.StatusOK {
-		respBody := new(bytes.Buffer)
-		_, err := respBody.ReadFrom(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
-		}
-		return nil, fmt.Errorf("got a non 200 status code: %v - %s", resp.StatusCode, respBody.String())
-	}
-	*/
+	
 	return resp.Body, nil
 }
 
@@ -250,17 +233,7 @@ func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (clos
     }
 
 	
-	/*
-	//fmt.Println("statuscode",resp.StatusCode)
-	if resp.StatusCode != http.StatusOK {
-		respBody := new(bytes.Buffer)
-		_, err := respBody.ReadFrom(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
-		}
-		return nil, fmt.Errorf("got a non 200 status code: %v ", resp.StatusCode)
-	}
-	*/
+	
 	
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
         fmt.Println("HTTP Status is in the 2xx range")
@@ -304,16 +277,7 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *server.Item
 		return nil, err
 	}
 	
-	/*
-	if resp.StatusCode != http.StatusOK {
-		respBody := new(bytes.Buffer)
-		_, err := respBody.ReadFrom(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("got a non 200 status code: %v", resp.StatusCode)
-		}
-		return nil, fmt.Errorf("got a non 200 status code: %v - %s", resp.StatusCode, respBody.String())
-	}
-	*/
+	
 
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
         fmt.Println("HTTP Status is in the 2xx range")
@@ -331,3 +295,33 @@ func (c *Client) requestPath() string {
 	return fmt.Sprintf("%s?access_token=%s", os.Getenv("ZOOM_ADDRESS"), os.Getenv("ZOOM_TOKEN"))
 
 }
+
+
+
+///////Deactivate///////////////////////////
+// Deactivate user
+func (c *Client) DeactivateUser(userId string, status string) error {
+	fmt.Println("Deactivate user Func")
+	url := fmt.Sprintf("https://api.zoom.us/v2/users/%s/status", userId)
+	data := fmt.Sprintf("{\"action\":\"%s\"}", status)
+	payload := strings.NewReader(data)
+
+	req, err := http.NewRequest("PUT", url, payload)
+	if err != nil {
+		return nil
+	}
+	var str1 string
+	str1 = "Bearer "
+	var str2 string
+	//str2 = c.authToken
+	str2 = os.Getenv("ZOOM_TOKEN")
+
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", str1+str2)
+	_, err = c.httpClient.Do(req)
+	if err != nil {
+		return nil
+	}
+	return nil
+}
+

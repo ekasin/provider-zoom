@@ -17,7 +17,7 @@ resource "zoom_user" "user1" {
   email      = "ui17co14@iiitsurat.ac.in"
   first_name = "ekansh"
   last_name  = "rock"
-
+  active = "activate"
 }
 
 

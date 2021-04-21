@@ -5,6 +5,7 @@ import (
 	"terraform-provider-zoom/server"
 	"strings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"fmt"
 )
 
 
@@ -32,6 +33,11 @@ func resourceUser() *schema.Resource {
 			"last_name": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "last name of new user",
+				Required:    true,
+			},
+			"active": &schema.Schema{
+				Type:        schema.TypeString,
+				Description: "Status of user",
 				Required:    true,
 			},
 		},
@@ -74,6 +80,10 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 		LastName:  d.Get("last_name").(string),
 	}
 
+	status := d.Get("active").(string)
+	errDeac := apiClient.DeactivateUser(user.EmailId, status)
+	fmt.Println(errDeac)
+	
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
 		return err
