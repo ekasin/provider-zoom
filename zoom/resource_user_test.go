@@ -9,6 +9,7 @@ import(
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	//"regexp"
 	"testing"
+	"log"
 )
 
 
@@ -27,6 +28,7 @@ func init() {
 
 func TestProvider(t *testing.T) {
 	if err := Provider().InternalValidate(); err != nil {
+		log.Println("[ERROR]: ",err)
 		t.Fatalf("err: %s", err)
 	}
 }
@@ -82,7 +84,7 @@ func TestAccItem_Basic(t *testing.T) {
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckExampleItemExists("zoom_user.user1"),
-					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr1234@gmail.com"),
+					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr34@gmail.com"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "last_name", "Singh"),
 				),
@@ -95,7 +97,7 @@ func TestAccItem_Basic(t *testing.T) {
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-  email        = "tapendrakmr1234@gmail.com"
+  email        = "tapendrakmr34@gmail.com"
   first_name   = "Ekansh"
   last_name    = "Singh"
 }
@@ -120,6 +122,7 @@ func testAccCheckItemDestroy(s *terraform.State) error {
 
 		err := c.DeleteItem(orderID)
 		if err != nil {
+			log.Println("[ERROR]: ",err)
 			return err
 		}
 	}
@@ -154,14 +157,12 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 			return fmt.Errorf("No Record ID is set")
 		}
 		name := rs.Primary.ID
-		//name := "tapendrasingh66@gmail.com"
 		apiClient := testAccProvider.Meta().(*client.Client)
 		_, err := apiClient.GetItem(name)
 		if err != nil {
+			log.Println("[ERROR]: ",err)
 			return fmt.Errorf("error fetching item with resource %s. %s", resource, err)
 		}
-		//fmt.Println("yesssssssss")
-		//fmt.Println("body",xyz)
 		return nil
 	}
 }
@@ -171,7 +172,7 @@ func testAccCheckExampleItemExists(resource string) resource.TestCheckFunc {
 
 
 //////////////////////////testing multiple users///////////////////////////////////////
-
+/*
 func TestAccItem_Multiple(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -204,7 +205,7 @@ resource "zoom_user" "user2" {
 `)
 }
 
-
+*/
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -214,7 +215,7 @@ resource "zoom_user" "user2" {
 
 
 //////////////////////////////////////////////TESTING FOR UPDATE OPERATION//////////////////////////////////////////////////////
-
+/*
 func TestAccItem_Update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -257,6 +258,7 @@ resource "zoom_user" "user1" {
 	email        = "ekansh1076@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "Singh"
+	active       = "activate"
 }
 `)
 }
@@ -267,10 +269,11 @@ resource "zoom_user" "user1" {
 	email        = "ekansh1076@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "kumar"
+	active       = "activate"
 }
 `)
 }
-
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -279,31 +282,3 @@ resource "zoom_user" "user1" {
 
 
 
-
-////////////////////////////////////////////////////////////////////////////////
-/*
-var whiteSpaceRegex = regexp.MustCompile("email cannot contain whitespace")
-
-func TestAccItem_WhitespaceName(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config:      testAccCheckItemWhitespace(),
-				ExpectError: whiteSpaceRegex,
-			},
-		},
-	})
-}
-
-func testAccCheckItemWhitespace() string {
-	return fmt.Sprintf(`
-resource "example_item" "test_item" {
-	email        = "ekansh086@gmail.com"
-	first_name   = "Ekansh"
-	last_name    = "kumar"
-}
-`)
-}
-*/
-//////////////////////////////////////////////////////////////////////////////////

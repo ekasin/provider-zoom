@@ -1,10 +1,10 @@
 package client
 
 import(
-	"fmt"
 	"terraform-provider-zoom/server"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"log"
 )
 
 
@@ -50,11 +50,12 @@ func TestClient_GetItem(t *testing.T) {
 
 			item, err := client.GetItem(tc.itemName)
 			if tc.expectErr {
-				//fmt.Println("yesssssssss")
+				log.Println("[READ ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			assert.NoError(t, err)
+			log.Println("[READ ERROR]: ", err)
 			assert.Equal(t, tc.expectedResp, item)
 		})
 	}
@@ -109,12 +110,13 @@ func TestClient_NewItem(t *testing.T) {
 
 			err := client.NewItem(tc.newItem)
 			if tc.expectErr {
+				log.Println("[CREATE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			item, err := client.GetItem(tc.newItem.EmailId)
-			fmt.Println("yesssss",item)
 			assert.NoError(t, err)
+			log.Println("[CREATE ERROR]: ", err)
 			assert.Equal(t, tc.newItem, item)
 		})
 	}
@@ -168,11 +170,13 @@ func TestClient_UpdateItem(t *testing.T) {
 			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
 			err := client.UpdateItem(tc.updatedItem)
 			if tc.expectErr {
+				log.Println("[UPDATE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			item, err := client.GetItem(tc.updatedItem.EmailId)
 			assert.NoError(t, err)
+			log.Println("[UPDATE ERROR]: ", err)
 			assert.Equal(t, tc.updatedItem, item)
 		})
 	}
@@ -219,10 +223,12 @@ func TestClient_DeleteItem(t *testing.T) {
 			err := client.DeleteItem(tc.itemName)
 			fmt.Println(err)
 			if tc.expectErr {
+				log.Println("[DELETE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			_, err = client.GetItem(tc.itemName)
+			log.Println("[DELETE ERROR]: ", err)
 			assert.Error(t, err)
 		})
 	}

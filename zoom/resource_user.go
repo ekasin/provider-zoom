@@ -6,8 +6,46 @@ import (
 	"strings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"fmt"
+	"regexp"
+	"log"
 )
 
+
+func validateName(v interface{}, k string) (ws []string, es []error) {
+	var errs []error
+	var warns []string
+	value, ok := v.(string)
+	if !ok {
+		errs = append(errs, fmt.Errorf("Expected name to be string"))
+		return warns, errs
+	}
+	whiteSpace := regexp.MustCompile(`\s+`)
+	if whiteSpace.Match([]byte(value)) {
+		errs = append(errs, fmt.Errorf("name cannot contain whitespace. Got %s", value))
+		return warns, errs
+	}
+	nameRegex := regexp.MustCompile("^[A-Za-z]\\w{5,29}$")
+
+	if !(nameRegex.MatchString(k)) {
+		errs = append(errs, fmt.Errorf("Expected name is not valid .Got %s", value))
+		return warns, errs
+	}
+	return
+}
+func validateEmail(v interface{}, k string) (ws []string, es []error) {
+	var errs []error
+	var warns []string
+	value := v.(string)
+
+	var emailRegex = regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+
+	if !(emailRegex.MatchString(value)) {
+		errs = append(errs, fmt.Errorf("Expected EmailId is not valid  %s", k))
+		return warns, errs
+	}
+	return
+
+}
 
 
 
@@ -27,21 +65,24 @@ func resourceUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "emailId of new user",
 				Required:    true,
+				ValidateFunc: validateEmail,
 			},
 			"first_name": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "first name of new user",
 				Required:    true,
+				ValidateFunc: validateName,
 			},
 			"last_name": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "last name of new user",
 				Required:    true,
+				ValidateFunc: validateName,
 			},
 			"active": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "Status of user",
-				Required:    true,
+				Optional :   true,
 			},
 		},
 	}
@@ -49,7 +90,6 @@ func resourceUser() *schema.Resource {
 }
 
 func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
-	// Warning or errors can be collected in a slice type
 	apiClient := m.(*client.Client)
 
 	user := server.Item{
@@ -61,6 +101,7 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 	err := apiClient.NewItem(&user)
 
 	if err != nil {
+		log.Println("[ERROR]: ",err)
 		return err
 	}
 	d.SetId(user.EmailId)
@@ -68,13 +109,13 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
-	// Warning or errors can be collected in a slice type
 
 	apiClient := m.(*client.Client)
 
 	userId := d.Id()
 	user, err := apiClient.GetItem(userId)
 	if err != nil {
+		log.Println("[ERROR]: ",err)
 		if strings.Contains(err.Error(), "not found") {
 			d.SetId("")
 		} else {
@@ -101,10 +142,11 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 
 	status := d.Get("active").(string)
 	errDeac := apiClient.DeactivateUser(user.EmailId, status)
-	fmt.Println(errDeac)
+	log.Println(errDeac)
 	
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
+		log.Printf("[Error] Error updating user :%s", err)
 		return err
 	}
 	return nil
@@ -117,6 +159,7 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 
 	err := apiClient.DeleteItem(userId)
 	if err != nil {
+		log.Printf("[Error] Error deleting user :%s", err)
 		return err
 	}
 	d.SetId("")
@@ -131,6 +174,7 @@ func resourceExistsUser(d *schema.ResourceData, m interface{}) (bool, error) {
 	itemId := d.Id()
 	_, err := apiClient.GetItem(itemId)
 	if err != nil {
+		log.Println("[ERROR]: ",err)
 		if strings.Contains(err.Error(), "not found") {
 			return false, nil
 		} else {
