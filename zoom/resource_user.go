@@ -18,6 +18,9 @@ func resourceUser() *schema.Resource {
 		Update: resourceUserUpdate,
 		Delete: resourceUserDelete,
 		Exists: resourceExistsUser,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 
 			"email": &schema.Schema{
@@ -67,6 +70,22 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 func resourceUserRead(d *schema.ResourceData, m interface{}) error {
 	// Warning or errors can be collected in a slice type
 
+	apiClient := m.(*client.Client)
+
+	userId := d.Id()
+	user, err := apiClient.GetItem(userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			d.SetId("")
+		} else {
+			return fmt.Errorf("error finding Item with ID %s", userId)
+		}
+	}
+	d.SetId(user.EmailId)
+	d.Set("email", user.EmailId)
+	d.Set("first_name", user.FirstName)
+	d.Set("last_name", user.LastName)
+	fmt.Println(user)
 	return nil
 }
 

@@ -16,15 +16,23 @@ provider "zoom" {
 resource "zoom_user" "user1" {
   email      = "ui17co14@iiitsurat.ac.in"
   first_name = "ekansh"
-  last_name  = "rock"
+  last_name  = "singh"
   active = "activate"
 }
 
+resource "zoom_user" "user2" {
+  # email      = "ui17co14@iiitsurat.ac.in"
+  # first_name = "ekansh"
+  # last_name  = "rock"
+  # active = "activate"
+}
 
+output "user2" {
+  value = zoom_user.user2
+}
 
 
 /*
-
 
 data "zoom_user" "user1" {
   id = "ekansh0786@gmail.com"

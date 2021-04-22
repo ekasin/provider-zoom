@@ -46,3 +46,18 @@ type User struct {
 
 }
 
+type NewUser struct {
+	Action   string   `json:"action"`
+	UserInfo UserInfo `json:"user_info"`
+}
+type UserInfo struct {
+	EmailId   string `json:"email"`
+	Type      int    `json:"type"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+type UpdateUser struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}

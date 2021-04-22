@@ -150,8 +150,14 @@ func (c *Client) UpdateItem(item *server.Item) error {
 
 
 func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *server.Item) (closer io.ReadCloser, err error) {
-	data := fmt.Sprintf("{\"first_name\":\"%s\",\"last_name\":\"%s\"}",item.FirstName,item.LastName)
-	payload := strings.NewReader(data)
+	//data := fmt.Sprintf("{\"first_name\":\"%s\",\"last_name\":\"%s\"}",item.FirstName,item.LastName)
+
+	updateuserjson := server.UpdateUser{
+		FirstName: item.FirstName,
+		LastName:  item.LastName,
+	}
+	updatejson, _ := json.Marshal(updateuserjson)
+	payload := strings.NewReader(string(updatejson))
 
 	req, err := http.NewRequest(method, c.updaterequestPath(path), payload)
 	var str1 string
@@ -256,9 +262,20 @@ func (c *Client) deleterequestPath(path string) string {
 
 
 func (c *Client) httpRequest(method string, body bytes.Buffer, item *server.Item) (closer io.ReadCloser, err error) {
-	data := fmt.Sprintf("{\"action\":\"create\",\"user_info\":{\"email\":\"%s\",\"type\":1,\"first_name\":\"%s\",\"last_name\":\"%s\"}}", item.EmailId, item.FirstName, item.LastName)
+	//data := fmt.Sprintf("{\"action\":\"create\",\"user_info\":{\"email\":\"%s\",\"type\":1,\"first_name\":\"%s\",\"last_name\":\"%s\"}}", item.EmailId, item.FirstName, item.LastName)
 
-	payload := strings.NewReader(data)
+
+	userjson := server.NewUser{
+		Action: "create",
+		UserInfo: server.UserInfo{
+			EmailId:   item.EmailId,
+			Type:      1,
+			FirstName: item.FirstName,
+			LastName:  item.LastName,
+		},
+	}
+	reqjson, _ := json.Marshal(userjson)
+	payload := strings.NewReader(string(reqjson))
 
 	req, err := http.NewRequest(method, c.requestPath(), payload)
 	var str1 string
