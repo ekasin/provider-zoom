@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"regexp"
 	"log"
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 )
 
 
@@ -51,11 +53,11 @@ func validateEmail(v interface{}, k string) (ws []string, es []error) {
 
 func resourceUser() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceUserCreate,
-		Read:   resourceUserRead,
-		Update: resourceUserUpdate,
-		Delete: resourceUserDelete,
-		Exists: resourceExistsUser,
+		CreateContext: resourceUserCreate,
+		ReadContext:   resourceUserRead,
+		UpdateContext: resourceUserUpdate,
+		DeleteContext: resourceUserDelete,
+		//Exists: resourceExistsUser,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -84,12 +86,18 @@ func resourceUser() *schema.Resource {
 				Description: "Status of user",
 				Optional :   true,
 			},
+			"id": &schema.Schema{
+				Type:        schema.TypeString,
+				Computed :   true,
+			},
 		},
 	}
 
 }
 
-func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
+func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	
+	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
 	user := server.Item{
@@ -102,36 +110,47 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
 
 	if err != nil {
 		log.Println("[ERROR]: ",err)
-		return err
+		return diag.FromErr(err)
 	}
 	d.SetId(user.EmailId)
-	return nil
+	resourceUserRead(ctx,d,m)
+	return diags
+	//return resourceUserRead(d,m)
 }
 
-func resourceUserRead(d *schema.ResourceData, m interface{}) error {
+func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
+	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
 	userId := d.Id()
 	user, err := apiClient.GetItem(userId)
+	
 	if err != nil {
 		log.Println("[ERROR]: ",err)
 		if strings.Contains(err.Error(), "not found") {
 			d.SetId("")
 		} else {
-			return fmt.Errorf("error finding Item with ID %s", userId)
+			return diag.FromErr(err)
+			//return fmt.Errorf("error finding Item with ID %s", userId)
 		}
 	}
-	d.SetId(user.EmailId)
-	d.Set("email", user.EmailId)
-	d.Set("first_name", user.FirstName)
-	d.Set("last_name", user.LastName)
+	
+	if len(user.EmailId) > 0{
+		d.SetId(user.EmailId)
+		d.Set("email", user.EmailId)
+		d.Set("first_name", user.FirstName)
+		d.Set("last_name", user.LastName)
+	}
+	
 	fmt.Println(user)
-	return nil
+	
+	return diags
 }
 
 
-func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var _ diag.Diagnostics
 	apiClient := m.(*client.Client)
 
 	user := server.Item{
@@ -147,12 +166,16 @@ func resourceUserUpdate(d *schema.ResourceData, m interface{}) error {
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
 		log.Printf("[Error] Error updating user :%s", err)
-		return err
+		//return err
+		return diag.FromErr(err)
 	}
-	return nil
+	//return resourceUserRead(ctx,d,m)
+	//return diags
+	return resourceUserRead(ctx,d,m)
 }
 
-func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
+func resourceUserDelete(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
 	userId := d.Id()
@@ -160,14 +183,15 @@ func resourceUserDelete(d *schema.ResourceData, m interface{}) error {
 	err := apiClient.DeleteItem(userId)
 	if err != nil {
 		log.Printf("[Error] Error deleting user :%s", err)
-		return err
+		//return err
+		return diag.FromErr(err)
 	}
 	d.SetId("")
-	return nil
+	return diags
 }
 
 
-
+/*
 func resourceExistsUser(d *schema.ResourceData, m interface{}) (bool, error) {
 	apiClient := m.(*client.Client)
 
@@ -183,3 +207,4 @@ func resourceExistsUser(d *schema.ResourceData, m interface{}) (bool, error) {
 	}
 	return true, nil
 }
+*/

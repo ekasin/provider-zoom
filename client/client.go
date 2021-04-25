@@ -68,8 +68,8 @@ func (c *Client) GetItem(name string) (*server.Item, error) {
 	return item, nil
 }
 
-func (c *Client) gethttpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
-	req, err := http.NewRequest(method, c.getrequestPath(path), &body)
+func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
+	req, err := http.NewRequest(method, "https://api.zoom.us/v2/users/"+emailid, &body)
 	if err != nil {
 		log.Println("[ERROR]: ", err)
 		return nil, err
@@ -85,23 +85,17 @@ func (c *Client) gethttpRequest(path, method string, body bytes.Buffer) (closer 
 		return nil, err
 	}
 	
-	
 	if resp.StatusCode != http.StatusOK {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("got a read non 200 status code: %v", resp.StatusCode)
+			return nil, fmt.Errorf("got a  non 200 status code: %v", resp.StatusCode)
 		}
-		return nil, fmt.Errorf("got a non read 200 status code: %v - %s", resp.StatusCode, respBody.String())
+		return nil, fmt.Errorf("got a non  200 status code: %v - %s", resp.StatusCode, respBody.String())
 	}
 
 	return resp.Body, nil
 }
-
-func (c *Client) getrequestPath(path string) string {
-	return fmt.Sprintf("%s/%s", os.Getenv("ZOOM_ADDRESS"), path)
-}
-
 
 
 
@@ -270,7 +264,6 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *server.Item
 	
 
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
-        fmt.Println("HTTP Status is in the 2xx range")
 		return resp.Body, nil
     } else {
 		return nil, fmt.Errorf("got a non create 200 status code: %v", resp.StatusCode)

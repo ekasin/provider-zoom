@@ -1,6 +1,7 @@
 package server
 
 type Item struct {
+	Id        string `json:"id"`
 	EmailId   string `json:"email"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`

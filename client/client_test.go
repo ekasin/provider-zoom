@@ -18,19 +18,21 @@ func TestClient_GetItem(t *testing.T) {
 	}{
 		{
 			testName: "user exists",
-			itemName: "ekansh0786@gmail.com",
+			itemName: "tapendrakmr786@gmail.com",
 			seedData: map[string]server.Item{
 				"ekansh0786@gmail.com": {
-					EmailId:   "ekansh0786@gmail.com",
-					FirstName: "ekansh",
-					LastName:  "rock",
+					Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+					EmailId:   "tapendrakmr786@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
 				},
 			},
 			expectErr: false,
 			expectedResp: &server.Item{
-				EmailId:   "ekansh0786@gmail.com",
-				FirstName: "ekansh",
-				LastName:  "rock",
+				Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+				EmailId:   "tapendrakmr786@gmail.com",
+				FirstName: "tapendra",
+				LastName:  "kumar",
 			},
 		},
 		
@@ -77,9 +79,10 @@ func TestClient_NewItem(t *testing.T) {
 		{
 			testName: "success",
 			newItem: &server.Item{
-				EmailId:   "ekansh0786@gmail.com",
-				FirstName: "ekansh",
-				LastName:  "rock",
+				Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+				EmailId:   "tapendrakmr786@gmail.com",
+				FirstName: "tapendra",
+				LastName:  "kumar",
 			},
 			seedData:  nil,
 			expectErr: false,
@@ -87,15 +90,17 @@ func TestClient_NewItem(t *testing.T) {
 		{
 			testName: "item already exists",
 			newItem: &server.Item{
-				EmailId:   "ekansh0786@gmail.com",
-				FirstName: "ekansh",
-				LastName:  "rock",
+				Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+				EmailId:   "tapendrakmr786@gmail.com",
+				FirstName: "tapendra",
+				LastName:  "kumar",
 			},
 			seedData: map[string]server.Item{
 				"item1": {
-				EmailId:   "ekansh0786@gmail.com",
-				FirstName: "ekansh",
-				LastName:  "rock",
+					Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+					EmailId:   "tapendrakmr786@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
 				},
 			},
 			expectErr: true,
@@ -140,15 +145,17 @@ func TestClient_UpdateItem(t *testing.T) {
 		{
 			testName: "item exists",
 			updatedItem: &server.Item{
-				EmailId:   "ekansh0786@gmail.com",
-					FirstName: "ekansh",
-					LastName:  "rock",
+				Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+					EmailId:   "tapendrakmr786@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
 			},
 			seedData: map[string]server.Item{
 				"item1": {
-					EmailId:   "ekansh0786@gmail.com",
-					FirstName: "ekansh",
-					LastName:  "rock",
+					Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+					EmailId:   "tapendrakmr786@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
 				},
 			},
 			expectErr: false,
@@ -156,6 +163,7 @@ func TestClient_UpdateItem(t *testing.T) {
 		{
 			testName: "item does not exist",
 			updatedItem: &server.Item{
+				Id :       "dfhjjddfjsd",
 				EmailId:   "ui17ec38@iitsurat.ac.in",
 				FirstName: "ekansh",
 				LastName:  "rock",
@@ -191,7 +199,7 @@ func TestClient_UpdateItem(t *testing.T) {
 
 ////////////////////////////Delete Testing/////////////////////////
 
-/*
+
 
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
@@ -202,12 +210,13 @@ func TestClient_DeleteItem(t *testing.T) {
 	}{
 		{
 			testName: "user exists",
-			itemName: "ekansh0786@gmail.com",
+			itemName: "tapendrakmr786@gmail.com",
 			seedData: map[string]server.User{
 				"user1": {
-					EmailId:   "ekansh0786@gmail.com",
-					FirstName: "ekansh",
-					LastName:  "rock",
+					Id:        "PdHrcwbOSr2p2s8jDkNwVA",
+					EmailId:   "tapendrakmr786@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
 				},
 			},
 			expectErr: false,
@@ -221,7 +230,7 @@ func TestClient_DeleteItem(t *testing.T) {
 			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
 			
 			err := client.DeleteItem(tc.itemName)
-			fmt.Println(err)
+			log.Println(err)
 			if tc.expectErr {
 				log.Println("[DELETE ERROR]: ", err)
 				assert.Error(t, err)
@@ -234,6 +243,6 @@ func TestClient_DeleteItem(t *testing.T) {
 	}
 }
 
-*/
+
 
 //////////////////////////////////////////////////////////////////
