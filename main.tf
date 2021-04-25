@@ -14,20 +14,58 @@ provider "zoom" {
 
 
 resource "zoom_user" "user1" {
-  email      = "tapendrakmr786@gmail.com"
-  first_name = "tapendra"
-  last_name  = "kumar"
-  active = "activate"
+   email      = "tapendrakmr786@gmail.com"
+   first_name = "tapendra"
+   last_name  = "kumar"
+   active = "activate"
 }
+
+
+resource "zoom_user" "user2" {
+   email      = "ashishdhodria27@gmail.com"
+   first_name = "coding"
+   last_name  = "ninza"
+   active = "activate"
+}
+
+data "zoom_user" "user3" {
+  id = "ekansh0786@gmail.com"
+}
+
+
+output "user3" {
+  value = data.zoom_user.user3
+}
+
 
 /*
-resource "zoom_user" "user1" {
-    email      = "ekansh0786@gmail.com"
-    first_name = "ekansh"
-    last_name  = "rock"
-    active = "deactivate"
+resource "zoom_user" "user2" {
+  # email      = "tapendrakmr786@gmail.com"
+  # first_name = "tapendra"
+  # last_name  = "kumar"
+  # active = "activate"
 }
+*/
 
+
+
+/*
+resource "zoom_user" "user2" {
+    # email      = "ekansh0786@gmail.com"
+    # first_name = "ekansh"
+    # last_name  = "rock"
+    # active = "deactivate"
+}
+*/
+/*
+resource "zoom_user" "user3" {
+    # email      = "ekansh0786@gmail.com"
+    # first_name = "ekansh"
+    # last_name  = "rock"
+    # active = "deactivate"
+}
+*/
+/*
 data "zoom_user" "user2" {
   id = "ui17co14@iiitsurat.ac.in"
 }

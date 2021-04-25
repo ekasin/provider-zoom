@@ -22,7 +22,7 @@ func TestAccItem_Basic(t *testing.T) {
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr1189@gmail.com"),
+					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr3389@gmail.com"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "last_name", "Singh"),
 				),
@@ -35,7 +35,7 @@ func TestAccItem_Basic(t *testing.T) {
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-  email        = "tapendrakmr1189@gmail.com"
+  email        = "tapendrakmr3389@gmail.com"
   first_name   = "Ekansh"
   last_name    = "Singh"
 }
@@ -72,44 +72,6 @@ func testAccCheckItemDestroy(s *terraform.State) error {
 
 
 
-//////////////////////////testing multiple users///////////////////////////////////////
-
-func TestAccItem_Multiple(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		//CheckDestroy: testAccCheckItemDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccCheckItemMultiple(),
-				Check: resource.ComposeTestCheckFunc(
-					//testAccCheckExampleItemExists("zoom_user.user1"),
-					//testAccCheckExampleItemExists("zoom_user.user2"),
-				),
-			},
-		},
-	})
-}
-
-func testAccCheckItemMultiple() string {
-	return fmt.Sprintf(`
-resource "zoom_user" "user1" {
-	email        = "ekansh1786@gmail.com"
-	first_name   = "Ekansh"
-	last_name    = "Singh"
-}
-resource "zoom_user" "user2" {
-	email        = "ekansh1786@gmail.com"
-  	first_name   = "Ekansh"
-  	last_name    = "Singh"
-  }
-`)
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 
@@ -127,7 +89,7 @@ func TestAccItem_Update(t *testing.T) {
 				Config: testAccCheckItemUpdatePre(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"zoom_user.user1", "email", "ekansh1076@gmail.com"),
+						"zoom_user.user1", "email", "ekansh3276@gmail.com"),
 					resource.TestCheckResourceAttr(
 						"zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr(
@@ -139,7 +101,7 @@ func TestAccItem_Update(t *testing.T) {
 				Config: testAccCheckItemUpdatePost(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"zoom_user.user1", "email", "ekansh1076@gmail.com"),
+						"zoom_user.user1", "email", "ekansh3276@gmail.com"),
 					resource.TestCheckResourceAttr(
 						"zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr(
@@ -154,7 +116,7 @@ func TestAccItem_Update(t *testing.T) {
 func testAccCheckItemUpdatePre() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-	email        = "ekansh1076@gmail.com"
+	email        = "ekansh3276@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "Singh"
 	active       = "activate"
@@ -165,7 +127,7 @@ resource "zoom_user" "user1" {
 func testAccCheckItemUpdatePost() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-	email        = "ekansh1076@gmail.com"
+	email        = "ekansh3276@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "kumar"
 	active       = "activate"

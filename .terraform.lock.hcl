@@ -5,6 +5,6 @@ provider "hashicorp.com/edu/zoom" {
   version     = "0.2.0"
   constraints = "0.2.0"
   hashes = [
-    "h1:aaZZlwI3J2Ngo55S1QkNNaNUU+SLlc9Y09qikn3Z/C4=",
+    "h1:WEwbni2P2ZagPL5k2zgndzRoxw7dDPQjguJW4cQEdpA=",
   ]
 }

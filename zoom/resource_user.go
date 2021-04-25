@@ -57,7 +57,6 @@ func resourceUser() *schema.Resource {
 		ReadContext:   resourceUserRead,
 		UpdateContext: resourceUserUpdate,
 		DeleteContext: resourceUserDelete,
-		//Exists: resourceExistsUser,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -115,7 +114,6 @@ func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{
 	d.SetId(user.EmailId)
 	resourceUserRead(ctx,d,m)
 	return diags
-	//return resourceUserRead(d,m)
 }
 
 func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -132,7 +130,6 @@ func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{})
 			d.SetId("")
 		} else {
 			return diag.FromErr(err)
-			//return fmt.Errorf("error finding Item with ID %s", userId)
 		}
 	}
 	
@@ -143,7 +140,6 @@ func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{})
 		d.Set("last_name", user.LastName)
 	}
 	
-	fmt.Println(user)
 	
 	return diags
 }
@@ -166,11 +162,8 @@ func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
 		log.Printf("[Error] Error updating user :%s", err)
-		//return err
 		return diag.FromErr(err)
 	}
-	//return resourceUserRead(ctx,d,m)
-	//return diags
 	return resourceUserRead(ctx,d,m)
 }
 
@@ -183,28 +176,9 @@ func resourceUserDelete(ctx context.Context,d *schema.ResourceData, m interface{
 	err := apiClient.DeleteItem(userId)
 	if err != nil {
 		log.Printf("[Error] Error deleting user :%s", err)
-		//return err
 		return diag.FromErr(err)
 	}
 	d.SetId("")
 	return diags
 }
 
-
-/*
-func resourceExistsUser(d *schema.ResourceData, m interface{}) (bool, error) {
-	apiClient := m.(*client.Client)
-
-	itemId := d.Id()
-	_, err := apiClient.GetItem(itemId)
-	if err != nil {
-		log.Println("[ERROR]: ",err)
-		if strings.Contains(err.Error(), "not found") {
-			return false, nil
-		} else {
-			return false, err
-		}
-	}
-	return true, nil
-}
-*/

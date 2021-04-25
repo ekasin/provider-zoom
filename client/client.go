@@ -13,6 +13,20 @@ import (
 )
 
 
+var (
+    Errors = make(map[int]string)
+)
+
+func init() {
+	Errors[400] = "Bad Request, StatusCode = 400"
+	Errors[404] = "User Does Not Exist , StatusCode = 404"
+	Errors[409] = "User Already Exist, StatusCode = 409"
+	Errors[401] = "Unautharized Access, StatusCode = 401"
+	Errors[429] = "User Has Sent Too Many Request, StatusCode = 429"
+}
+
+
+
 // Client -
 type Client struct {
 	hostname   string
@@ -84,14 +98,14 @@ func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (clos
 		log.Println("[ERROR]: ",err)
 		return nil, err
 	}
-	
+
 	if resp.StatusCode != http.StatusOK {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {
-			return nil, fmt.Errorf("got a  non 200 status code: %v", resp.StatusCode)
+			return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
 		}
-		return nil, fmt.Errorf("got a non  200 status code: %v - %s", resp.StatusCode, respBody.String())
+		return nil, fmt.Errorf("Error : %v ", Errors[resp.StatusCode])
 	}
 
 	return resp.Body, nil
@@ -160,7 +174,7 @@ func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *
 	if resp.StatusCode >= 200 && resp.StatusCode <= 400 {
 		return resp.Body, nil
     } else {
-		return nil, fmt.Errorf("got a non update 200 status code: %v", resp.StatusCode)
+		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
 
 	
@@ -213,7 +227,7 @@ func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (clos
 		return resp.Body, nil
     } else {
 		log.Println("Broken Request")
-		return nil, fmt.Errorf("got a non 200 delete status code: %v", resp.StatusCode)
+		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
 
 
@@ -266,7 +280,7 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *server.Item
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		return resp.Body, nil
     } else {
-		return nil, fmt.Errorf("got a non create 200 status code: %v", resp.StatusCode)
+		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
 
 }
