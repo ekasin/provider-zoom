@@ -21,3 +21,8 @@ terraform zoom provider is based on Terraform, this means that you need
 2. terraform plan <br>
 3. terrafrom apply (To create or update the user)<br>
 4. terraform destroy (To destroy the created user)<br>
+
+## Steps to run import command
+
+1. Write manually a resource configuration block for the resource, to which the imported object will be mapped.
+2. RUN terraform import zoom_user.sample <user_id> 
