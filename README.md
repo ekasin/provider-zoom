@@ -99,7 +99,7 @@ Otherwise you can manually move the file from current directory to destination d
 4. To check test cover run `go test -cover`
 
 
-##Example Usage
+## Example Usage
 ```terraform
 terraform {
   required_providers {
@@ -117,8 +117,8 @@ provider "zoom" {
 
 resource "zoom_user" "user1" {
    email      = "[EMAIL_ID]"
-   first_name = "[FIRST_NAME]"
-   last_name  = "[LAST_NAME]"
+   first_name = "[USER_FIRST_NAME]"
+   last_name  = "[USER_LAST_NAME]"
    status = "activate"
 }
 
