@@ -119,7 +119,7 @@ resource "zoom_user" "user1" {
 	email        = "ekansh3276@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "Singh"
-	active       = "activate"
+	status       = "activate"
 }
 `)
 }
@@ -130,7 +130,7 @@ resource "zoom_user" "user1" {
 	email        = "ekansh3276@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "kumar"
-	active       = "activate"
+	status       = "activate"
 }
 `)
 }
