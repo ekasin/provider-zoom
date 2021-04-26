@@ -39,8 +39,7 @@ Command:
 ```
 mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
 ```
-<br>
-</t> For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
+For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
 
 5. Run `go build`. This will save the binary (`.exe`) file in the main/root directory. <br>
 6. Run this command to move this binary file to appropriate location <br>
