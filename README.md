@@ -22,24 +22,39 @@ This app will provide us with the token which will be needed to configure our pr
 
 
 ### Initialise Zoom Provider in local machine 
-1. Clone the repository `git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom` <br>
+1. Clone the repository 
+```
+git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom
+``` 
+<br>
+
 2. Add the token generated in the JWT Zoom App to the token field in `main.tf` <br>
 3. Run `go mod vendor` to create a vendor directory that contains all the provider's dependencies. <br>
 4. Run the following command to create a vendor subdirectory which will comprise of  all provider dependencies. <br>
-`~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}` <br><br>
-Command: `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]` <br>
+```
+~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}
+``` 
+<br><br>
+Command: 
+```
+mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
+```
+<br>
 </t> For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
 
 5. Run `go build`. This will save the binary (`.exe`) file in the main/root directory. <br>
 6. Run this command to move this binary file to appropriate location <br>
- `move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\zoom\0.2.0\[OS_ARCH]` <br>
+ ```
+ move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\zoom\0.2.0\[OS_ARCH]
+ ``` 
+ <br>
 Otherwise you can manually move the file from current directory to destination directory.<br>
 
 
 ## Installation
 
 1. Download required binaries <br>
-2. move binary ~/.terraform.d/plugins/[architecture name]/
+2. move binary `~/.terraform.d/plugins/[architecture name]/`
 
 
 ## Run the Terraform provider
