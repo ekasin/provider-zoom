@@ -86,7 +86,20 @@ Otherwise you can manually move the file from current directory to destination d
 1. Delete the resource block of the particular user from main.tf file 
 2. Run the command `terraform apply` and write `yes` for the prompt.
 
-#### Import A User
+#### Import a User Data
 1. Write manually a resource configuration block for the User in main.tf, to which the imported object will be mapped.
 2. Run the command `terraform import zoom_user.sample [user_id]`
 3. Check for the attributes in the `.tfstate` file
+
+
+### Testing the Provider
+#### SetUp System Variables
+Explicitly set `ZOOM_ADDRESS` and `ZOOM_PASSWORD` in User Environment Variables. (Procedure similar to Setting up System Path as discussed above in SYSTEM PATH (Windows 10) section).
+Set `TF_ACC` as `true` in System User Variables.
+
+#### Testing commands
+1. Navigate to the test file directory.
+2. Run command `go test` . This command will give combined test result for the execution or errors if any failure occur.
+3. If you want to see test result of each module individually while running test in a single go , run command `go test -v`
+4. To check test cover run `go test -cover`
+
