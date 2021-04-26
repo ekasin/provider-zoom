@@ -80,7 +80,7 @@ func resourceUser() *schema.Resource {
 				Required:    true,
 				ValidateFunc: validateName,
 			},
-			"active": &schema.Schema{
+			"status": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "Status of user",
 				Optional :   true,
@@ -155,7 +155,7 @@ func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{
 		LastName:  d.Get("last_name").(string),
 	}
 
-	status := d.Get("active").(string)
+	status := d.Get("status").(string)
 	errDeac := apiClient.DeactivateUser(user.EmailId, status)
 	log.Println(errDeac)
 	
