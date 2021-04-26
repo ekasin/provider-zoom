@@ -98,3 +98,40 @@ Otherwise you can manually move the file from current directory to destination d
 3. If you want to see test result of each test function individually while running test in a single go, run command `go test -v`
 4. To check test cover run `go test -cover`
 
+
+##Example Usage
+```
+terraform {
+  required_providers {
+    zoom = {
+      version = "0.2"
+      source  = "hashicorp.com/zoom"
+    }
+  }
+}
+
+provider "zoom" {
+  address = "https://api.zoom.us/v2/users"
+  token   = "access_token"
+}
+
+
+resource "zoom_user" "user1" {
+   email      = "[EMAIL_ID]"
+   first_name = "[FIRST_NAME]"
+   last_name  = "[LAST_NAME]"
+   status = "activate"
+}
+
+
+
+data "zoom_user" "user1" {
+  id = "[EMAIL_ID]"
+}
+
+
+output "user1" {
+  value = data.zoom_user.user1
+}
+```
+
