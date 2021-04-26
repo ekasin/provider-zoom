@@ -17,7 +17,7 @@ resource "zoom_user" "user1" {
    email      = "tapendrakmr786@gmail.com"
    first_name = "tapendra"
    last_name  = "kumar"
-   active = "activate"
+   status = "activate"
 }
 
 
@@ -25,7 +25,7 @@ resource "zoom_user" "user2" {
    email      = "ashishdhodria27@gmail.com"
    first_name = "coding"
    last_name  = "ninza"
-   active = "activate"
+   status = "activate"
 }
 
 data "zoom_user" "user3" {
@@ -43,7 +43,7 @@ resource "zoom_user" "user2" {
   # email      = "tapendrakmr786@gmail.com"
   # first_name = "tapendra"
   # last_name  = "kumar"
-  # active = "activate"
+  # status = "activate"
 }
 */
 
@@ -54,7 +54,7 @@ resource "zoom_user" "user2" {
     # email      = "ekansh0786@gmail.com"
     # first_name = "ekansh"
     # last_name  = "rock"
-    # active = "deactivate"
+    # status = "deactivate"
 }
 */
 /*
@@ -62,7 +62,7 @@ resource "zoom_user" "user3" {
     # email      = "ekansh0786@gmail.com"
     # first_name = "ekansh"
     # last_name  = "rock"
-    # active = "deactivate"
+    # status = "deactivate"
 }
 */
 /*
@@ -150,7 +150,7 @@ resource "zoom_user" "user8" {
     email      = "rahulgautamg44@gmail.com"
     first_name = "ashwini"
     last_name  = "rock"
-    active = "activate"
+    status = "activate"
 }
 
 output "user8" {
@@ -165,7 +165,7 @@ resource "zoom_user" "user7" {
     email      = "ekansh0786@gmail.com"
     first_name = "ekansh"
     last_name  = "rock"
-    active = "activate"
+    status = "activate"
 }
 */
 
@@ -174,7 +174,7 @@ resource "zoom_user" "user2" {
     email      = "ekansh0786@gmail.com"
     first_name = "ekansh"
     last_name  = "rock"
-    active = "activate"
+    status = "activate"
 }
 */
 /*
@@ -189,7 +189,7 @@ resource "zoom_user" "user3" {
     email      = "ekansh0786@gmail.com"
     first_name = "ekansh"
     last_name  = "rock"
-    active = "activate"
+    status = "activate"
 }
 
 output "user3" {
