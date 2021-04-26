@@ -93,13 +93,8 @@ Otherwise you can manually move the file from current directory to destination d
 
 
 ### Testing the Provider
-#### SetUp System Variables
-Explicitly set `ZOOM_ADDRESS` and `ZOOM_PASSWORD` in User Environment Variables. (Procedure similar to Setting up System Path as discussed above in SYSTEM PATH (Windows 10) section).
-Set `TF_ACC` as `true` in System User Variables.
-
-#### Testing commands
 1. Navigate to the test file directory.
 2. Run command `go test` . This command will give combined test result for the execution or errors if any failure occur.
-3. If you want to see test result of each module individually while running test in a single go , run command `go test -v`
+3. If you want to see test result of each test function individually while running test in a single go, run command `go test -v`
 4. To check test cover run `go test -cover`
 
