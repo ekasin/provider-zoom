@@ -100,7 +100,7 @@ Otherwise you can manually move the file from current directory to destination d
 
 
 ##Example Usage
-```
+```terraform
 terraform {
   required_providers {
     zoom = {
@@ -115,7 +115,6 @@ provider "zoom" {
   token   = "access_token"
 }
 
-
 resource "zoom_user" "user1" {
    email      = "[EMAIL_ID]"
    first_name = "[FIRST_NAME]"
@@ -123,12 +122,9 @@ resource "zoom_user" "user1" {
    status = "activate"
 }
 
-
-
 data "zoom_user" "user1" {
   id = "[EMAIL_ID]"
 }
-
 
 output "user1" {
   value = data.zoom_user.user1
