@@ -34,7 +34,6 @@ git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom
 ```
 ~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}
 ``` 
-<br><br>
 Command: 
 ```
 mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
@@ -42,11 +41,10 @@ mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
 For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
 
 5. Run `go build`. This will save the binary (`.exe`) file in the main/root directory. <br>
-6. Run this command to move this binary file to appropriate location <br>
+6. Run this command to move this binary file to appropriate location.
  ```
  move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\zoom\0.2.0\[OS_ARCH]
  ``` 
- <br>
 Otherwise you can manually move the file from current directory to destination directory.<br>
 
 
