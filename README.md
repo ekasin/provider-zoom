@@ -7,7 +7,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 
 * [Go](https://golang.org/doc/install) 1.16 <br>
 * [Terraform](https://www.terraform.io/downloads.html) 0.13.x <br/>
-* Zoom Pro/Premium account (Token)
+* [Zoom](https://zoom.us/) Pro/Premium account (Token)
 
 
 ### Setup Zoom Account
@@ -22,7 +22,7 @@ This app will provide us with the token which will be needed to configure our pr
 
 
 ### Initialise Zoom Provider in local machine 
-1. Clone the repository `git clone [RESPOSITORY GITHUB LINK] && cd terraform-provider-zoom` <br>
+1. Clone the repository `git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom` <br>
 2. Add the token generated in the JWT Zoom App to the token field in `main.tf` <br>
 3. Run `go mod vendor` to create a vendor directory that contains all the provider's dependencies. <br>
 4. Run the following command to create a vendor subdirectory which will comprise of  all provider dependencies. <br>
@@ -74,7 +74,7 @@ Otherwise you can manually move the file from current directory to destination d
 1. Delete the resource block of the particular user from main.tf file 
 2. Run the command `terraform apply` and write `yes` for the prompt.
 
-## Import A User
+#### Import A User
 1. Write manually a resource configuration block for the User in main.tf, to which the imported object will be mapped.
 2. Run the command `terraform import zoom_user.sample [user_id]`
 3. Check for the attributes in the `.tfstate` file
