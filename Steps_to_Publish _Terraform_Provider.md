@@ -27,7 +27,9 @@ For more details on the Document format refer : https://www.terraform.io/docs/re
  
  ### GitHub Actions (Preferred)
  
-<br> **[A] Create a Signing Key**
+<br> [A] Create and export a signing key that you plan on using to sign your provider releases. See [Preparing and Adding a Signing Key](#add_signing_key)
+
+Create a Signing Key**
  1. Generate a GPG key which will be used for signing releases (https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key)
  2. Export the public key in ASCII-armor format using the following command:
 ```bash
@@ -59,10 +61,19 @@ gpg --armor --export "[Key ID or email address]"
 
 - Release is finalized
  
+ ## Publishing to the Registry
  
+ ### Signing in
+ 1. Sign in to the [Terraform Registry](https://www.terraform.io/docs/registry/index.html#user-account) with a GitHub account. 
+ 2. Following permissions should be given by the GitHub account used to the provider repository you wish to publish. <br>
+ ![alt text](https://www.terraform.io/docs/registry/providers/images/github-oauth-permissions-8f791b2d.png)
  
- 
- 
+ ### <a name="add_signing_key"></a>Preparing and Adding a Signing Key
+ 1. Generate a GPG key which will be used for signing releases (https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key)
+ 2. Export the public key in ASCII-armor format using the following command:
+```bash
+gpg --armor --export "[Key ID or email address]"
+```
  
  
  
