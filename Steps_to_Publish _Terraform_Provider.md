@@ -75,5 +75,10 @@ gpg --armor --export "[Key ID or email address]"
 gpg --armor --export "[Key ID or email address]"
 ```
  
+ ## Publishing Your Provider
+ 1. In top right navigation panel, select ***Publish -> Providers*** 
+ 2. Follow the prompts to select organisation and repository.
  
+ 
+ ### CONGRATULATIONS YOU HAVE PUBLISHED YOUR PROVIDER!!!
  
