@@ -80,5 +80,5 @@ gpg --armor --export "[Key ID or email address]"
  2. Follow the prompts to select organisation and repository.
  
  
- ### CONGRATULATIONS YOU HAVE PUBLISHED YOUR PROVIDER!!!
+ ##### :tada: CONGRATULATIONS YOU HAVE PUBLISHED YOUR PROVIDER!!! :confetti_ball:
  
