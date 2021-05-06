@@ -1,25 +1,24 @@
 package zoom
 
 import (
+	"os"
 	"terraform-provider-zoom/client"
-
+	tkn "terraform-provider-zoom/token"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Provider -
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"address": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ZOOM_ADDRESS", ""),
+			"apisecret": &schema.Schema{
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
 			},
-			"token": &schema.Schema{
-				Type:        schema.TypeString,
-				Optional:    true,
-				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("ZOOM_TOKEN", ""),
+			"apikey": &schema.Schema{
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -33,8 +32,9 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	address := d.Get("address").(string)
-	token := d.Get("token").(string)
-	return client.NewClient(address, token), nil
-
+	apisecret := d.Get("apisecret").(string)
+	apikey := d.Get("apikey").(string)
+	token := tkn.TokenGenerate(apisecret, apikey)
+	os.Setenv("ZOOM_TOKEN", token)
+	return client.NewClient(token), nil
 }
