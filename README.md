@@ -64,36 +64,31 @@ Otherwise you can manually move the file from current directory to destination d
 #### Create User
 1. Add the user email, first name, last name in the respective field in `main.tf`
 2. Initialize the terraform provider by the command `terraform init`
-3. Check the changes applicable using `terraform plan`
-4. Apply the changes using command `terraform apply`
-5. Write yes to the prompt
-6. You will see that a user has been successfully created and an account activation mail has been sent to the user.
-7. Activate the account using the link provided in the mail.
+3. Check the changes applicable using `terraform plan` and apply using `terraform apply`
+4. You will see that a user has been successfully created and an account activation mail has been sent to the user.
+5. Activate the account using the link provided in the mail.
 
 #### Update the user
 1. Update the data of the user in the `main.tf` file
-2. Run the command `terraform init`
-3. Check the changes applicable using `terraform plan`
-4. Apply the changes using command `terraform apply`
-5. Write yes to the prompt
-6. You will see that a user data has been successfully updated.
+2. Apply the changes using `terraform apply`
+3. You will see that a user data has been successfully updated.
 
 #### Read the User Data
-1. Uncomment the data and resource blocks of the `main.tf` file
+1. Add data and output blocks of the `main.tf` file
 2. Run the command `terraform plan`
 3. This will fetch you all the necessary details of the user.
 
 #### Deactivate the user
 1. Change the status of User from activate to `deactivate`.
-2. Run the command `terraform apply` and write `yes` for the prompt.
+2. Run the command `terraform apply`.
 
 #### Delete the user
-1. Delete the resource block of the particular user from main.tf file 
-2. Run the command `terraform apply` and write `yes` for the prompt.
+1. Delete the resource block of the particular user from `main.tf` file 
+2. Run the command `terraform apply`.
 
 #### Import a User Data
 1. Write manually a resource configuration block for the User in main.tf, to which the imported object will be mapped.
-2. Run the command `terraform import zoom_user.sample [user_id]`
+2. Run the command `terraform import zoom_user.user1 [EMAIL_ID]`
 3. Check for the attributes in the `.tfstate` file
 
 
