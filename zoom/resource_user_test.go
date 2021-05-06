@@ -10,19 +10,16 @@ import(
 )
 
 
-
-
-
 func TestAccItem_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		//CheckDestroy: testAccCheckItemDestroy,
+		CheckDestroy: testAccCheckItemDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckItemBasic(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr3389@gmail.com"),
+					resource.TestCheckResourceAttr("zoom_user.user1", "email", "tapendrakmr39@gmail.com"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr("zoom_user.user1", "last_name", "Singh"),
 				),
@@ -35,17 +32,13 @@ func TestAccItem_Basic(t *testing.T) {
 func testAccCheckItemBasic() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-  email        = "tapendrakmr3389@gmail.com"
+  email        = "tapendrakmr39@gmail.com"
   first_name   = "Ekansh"
   last_name    = "Singh"
+  type         =  1
 }
 `)
 }
-
-
-
-
-////////////////////////////////////////TESTING FOR DELETE OPERATION//////////////////////////////////////////
 
 
 func testAccCheckItemDestroy(s *terraform.State) error {
@@ -69,27 +62,17 @@ func testAccCheckItemDestroy(s *terraform.State) error {
 }
 
 
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////TESTING FOR UPDATE OPERATION//////////////////////////////////////////////////////
-
 func TestAccItem_Update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		//CheckDestroy: testAccCheckItemDestroy,
+		CheckDestroy: testAccCheckItemDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckItemUpdatePre(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"zoom_user.user1", "email", "ekansh3276@gmail.com"),
+						"zoom_user.user1", "email", "ekansh336@gmail.com"),
 					resource.TestCheckResourceAttr(
 						"zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr(
@@ -101,7 +84,7 @@ func TestAccItem_Update(t *testing.T) {
 				Config: testAccCheckItemUpdatePost(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"zoom_user.user1", "email", "ekansh3276@gmail.com"),
+						"zoom_user.user1", "email", "ekansh336@gmail.com"),
 					resource.TestCheckResourceAttr(
 						"zoom_user.user1", "first_name", "Ekansh"),
 					resource.TestCheckResourceAttr(
@@ -116,10 +99,11 @@ func TestAccItem_Update(t *testing.T) {
 func testAccCheckItemUpdatePre() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-	email        = "ekansh3276@gmail.com"
+	email        = "ekansh336@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "Singh"
-	status       = "activate"
+	active       = "activate"
+	type         =  1
 }
 `)
 }
@@ -127,19 +111,11 @@ resource "zoom_user" "user1" {
 func testAccCheckItemUpdatePost() string {
 	return fmt.Sprintf(`
 resource "zoom_user" "user1" {
-	email        = "ekansh3276@gmail.com"
+	email        = "ekansh336@gmail.com"
 	first_name   = "Ekansh"
 	last_name    = "kumar"
-	status       = "activate"
+	active       = "activate"
+	type         =  1
 }
 `)
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
