@@ -1,9 +1,9 @@
 package client
 
-import(
-	"terraform-provider-zoom/server"
-	"github.com/stretchr/testify/assert"
+import (
+	"os"
 	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
 
@@ -11,27 +11,29 @@ func TestClient_GetItem(t *testing.T) {
 	testCases := []struct {
 		testName     string
 		itemName     string
-		seedData     map[string]server.Item
+		seedData     map[string]User
 		expectErr    bool
-		expectedResp *server.Item
+		expectedResp *User
 	}{
 		{
 			testName: "user exists",
 			itemName: "tapendrasingh66@gmail.com",
-			seedData: map[string]server.Item{
+			seedData: map[string]User{
 				"ekansh0786@gmail.com": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 					EmailId:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
 				},
 			},
 			expectErr: false,
-			expectedResp: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+			expectedResp: &User{
+				Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 				EmailId:   "tapendrasingh66@gmail.com",
 				FirstName: "tapendra",
-				LastName:  "singh",
+				LastName:  "kumar",
+				Type:        1,
 			},
 		},
 		
@@ -47,8 +49,7 @@ func TestClient_GetItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
-
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 			item, err := client.GetItem(tc.itemName)
 			if tc.expectErr {
 				assert.Error(t, err)
@@ -61,43 +62,41 @@ func TestClient_GetItem(t *testing.T) {
 }
 
 
-
-/////////////////////////////////////////////////////////////////////
-
-
-
 func TestClient_NewItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
-		newItem   *server.Item
-		seedData  map[string]server.Item
+		newItem   *User
+		seedData  map[string]User
 		expectErr bool
 	}{
 		{
 			testName: "success",
-			newItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+			newItem: &User{
+				Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 				EmailId:   "tapendrasingh66@gmail.com",
 				FirstName: "tapendra",
-				LastName:  "singh",
+				LastName:  "kumar",
+				Type:        1,
 			},
 			seedData:  nil,
 			expectErr: false,
 		},
 		{
 			testName: "item already exists",
-			newItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+			newItem: &User{
+				Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 				EmailId:   "tapendrasingh66@gmail.com",
 				FirstName: "tapendra",
-				LastName:  "singh",
+				LastName:  "kumar",
+				Type:        1,
 			},
-			seedData: map[string]server.Item{
+			seedData: map[string]User{
 				"item1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 					EmailId:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
 				},
 			},
 			expectErr: true,
@@ -107,8 +106,7 @@ func TestClient_NewItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
-
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 
 			err := client.NewItem(tc.newItem)
 			if tc.expectErr {
@@ -122,46 +120,41 @@ func TestClient_NewItem(t *testing.T) {
 	}
 }
 
-
-
-/////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////update//////////////////////////////////////
-
-
 func TestClient_UpdateItem(t *testing.T) {
 	testCases := []struct {
 		testName    string
-		updatedItem *server.Item
-		seedData    map[string]server.Item
+		updatedItem *User
+		seedData    map[string]User
 		expectErr   bool
 	}{
 		{
 			testName: "item exists",
-			updatedItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+			updatedItem: &User{
+				Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 					EmailId:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
 			},
-			seedData: map[string]server.Item{
+			seedData: map[string]User{
 				"item1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 					EmailId:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
 				},
 			},
 			expectErr: false,
 		},
 		{
 			testName: "item does not exist",
-			updatedItem: &server.Item{
+			updatedItem: &User{
 				Id :       "dfhjjddfjsd",
 				EmailId:   "ui17ec38@iitsurat.ac.in",
 				FirstName: "ekansh",
 				LastName:  "rock",
+				Type:        1,
 			},
 			seedData:  nil,
 			expectErr: true,
@@ -170,7 +163,7 @@ func TestClient_UpdateItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 			err := client.UpdateItem(tc.updatedItem)
 			if tc.expectErr {
 				assert.Error(t, err)
@@ -187,29 +180,24 @@ func TestClient_UpdateItem(t *testing.T) {
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////Delete Testing/////////////////////////
-
-/*
 
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
 		itemName  string
-		seedData  map[string]server.User
+		seedData  map[string]User
 		expectErr bool
 	}{
 		{
 			testName: "user exists",
 			itemName: "tapendrakmr786@gmail.com",
-			seedData: map[string]server.User{
+			seedData: map[string]User{
 				"user1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
 					EmailId:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
 				},
 			},
 			expectErr: false,
@@ -220,22 +208,15 @@ func TestClient_DeleteItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
-			
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 			err := client.DeleteItem(tc.itemName)
 			log.Println(err)
 			if tc.expectErr {
-				//log.Println("[DELETE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			_, err = client.GetItem(tc.itemName)
-			//log.Println("[DELETE ERROR]: ", err)
 			assert.Error(t, err)
 		})
 	}
 }
-
-*/
-
-//////////////////////////////////////////////////////////////////
