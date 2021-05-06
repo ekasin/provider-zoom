@@ -44,7 +44,6 @@ func TestClient_GetItem(t *testing.T) {
 			expectErr:    true,
 			expectedResp: nil,
 		},
-		
 	}
 
 	for _, tc := range testCases {
@@ -120,6 +119,7 @@ func TestClient_NewItem(t *testing.T) {
 	}
 }
 
+
 func TestClient_UpdateItem(t *testing.T) {
 	testCases := []struct {
 		testName    string
@@ -177,10 +177,6 @@ func TestClient_UpdateItem(t *testing.T) {
 }
 
 
-
-
-
-
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
@@ -201,9 +197,7 @@ func TestClient_DeleteItem(t *testing.T) {
 				},
 			},
 			expectErr: false,
-		},
-		
-		
+		},	
 	}
 
 	for _, tc := range testCases {
