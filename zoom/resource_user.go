@@ -1,17 +1,16 @@
 package zoom
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"regexp"
-	"strings"
 	"terraform-provider-zoom/client"
-	"terraform-provider-zoom/server"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"strings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"fmt"
+	"regexp"
+	"log"
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 )
+
 
 func validateName(v interface{}, k string) (ws []string, es []error) {
 	var errs []error
@@ -61,69 +60,75 @@ func resourceUser() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 
 			"email": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "emailId of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Description: "emailId of new user",
+				Required:    true,
 				ValidateFunc: validateEmail,
 			},
 			"first_name": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "first name of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Description: "first name of new user",
+				Required:    true,
 				ValidateFunc: validateName,
 			},
 			"last_name": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "last name of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Description: "last name of new user",
+				Required:    true,
 				ValidateFunc: validateName,
 			},
-			"status": &schema.Schema{
+			"active": &schema.Schema{
 				Type:        schema.TypeString,
 				Description: "Status of user",
-				Optional:    true,
+				Optional :   true,
 			},
 			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed :   true,
+			},
+			"type": &schema.Schema{
+				Type:        schema.TypeInt,
+				Description: "license of new user",
+				Required:    true,
 			},
 		},
 	}
 
 }
 
-func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
+func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
-	user := server.Item{
+	user := client.User{
 		EmailId:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
+		Type:      d.Get("type").(int),
 	}
 
 	err := apiClient.NewItem(&user)
 
 	if err != nil {
-		log.Println("[ERROR]: ", err)
+		log.Println("[ERROR]: ",err)
 		return diag.FromErr(err)
 	}
 	d.SetId(user.EmailId)
-	resourceUserRead(ctx, d, m)
+	resourceUserRead(ctx,d,m)
 	return diags
 }
 
-func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
 	userId := d.Id()
 	user, err := apiClient.GetItem(userId)
-
+	
 	if err != nil {
-		log.Println("[ERROR]: ", err)
+		log.Println("[ERROR]: ",err)
 		if strings.Contains(err.Error(), "not found") {
 			d.SetId("")
 		} else {
@@ -131,48 +136,42 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if len(user.EmailId) > 0 {
+	if len(user.EmailId) > 0{
 		d.SetId(user.EmailId)
 		d.Set("email", user.EmailId)
 		d.Set("first_name", user.FirstName)
 		d.Set("last_name", user.LastName)
+		d.Set("type", user.Type)
 	}
-
+	
+	
 	return diags
 }
 
-func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+
+func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var _ diag.Diagnostics
 	apiClient := m.(*client.Client)
-	var diags diag.Diagnostics
-	if d.HasChange("email") {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "User not allowed to change email",
-			Detail:   "User not allowed to change email",
-		})
 
-		return diags
-	}
-	user := server.Item{
+	user := client.User{
 		EmailId:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
 	}
 
-	status := d.Get("status").(string)
+	status := d.Get("active").(string)
 	errDeac := apiClient.DeactivateUser(user.EmailId, status)
 	log.Println(errDeac)
-
+	
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
 		log.Printf("[Error] Error updating user :%s", err)
 		return diag.FromErr(err)
 	}
-	return resourceUserRead(ctx, d, m)
+	return resourceUserRead(ctx,d,m)
 }
 
-func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserDelete(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
 
@@ -186,3 +185,4 @@ func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface
 	d.SetId("")
 	return diags
 }
+
