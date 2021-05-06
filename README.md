@@ -18,7 +18,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 3. Go to [Zoom Marketplace](https://marketplace.zoom.us/)<br>
 4. Click on `Build App`. For our purpose we need to make a JWT App. <br>
 5. Follow this [Create JWT Zoom App](https://marketplace.zoom.us/docs/guides/build/jwt-app) website to make an app. <br>
-This app will provide us with the token which will be needed to configure our provider and make request. <br>
+This app will provide us with the API Secret, API Key, and token which will be needed to configure our provider and make request. <br>
 
 
 ### Initialise Zoom Provider in local machine 
@@ -113,8 +113,8 @@ terraform {
 }
 
 provider "zoom" {
-  address = "https://api.zoom.us/v2/users"
-  token   = "access_token"
+  apikey = ""
+  apisecret = ""
 }
 
 resource "zoom_user" "user1" {
@@ -122,6 +122,7 @@ resource "zoom_user" "user1" {
    first_name = "[USER_FIRST_NAME]"
    last_name  = "[USER_LAST_NAME]"
    status = "activate"
+   type = [INTEGER VALUE]
 }
 
 data "zoom_user" "user1" {
