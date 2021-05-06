@@ -35,7 +35,9 @@ go mod init terraform-provider-zoom
 go mod tidy
 ```
 4. Run `go mod vendor` to create a vendor directory that contains all the provider's dependencies. <br>
-5. Run the following command to create a vendor subdirectory which will comprise of  all provider dependencies. <br>
+
+## Installation
+1. Run the following command to create a vendor subdirectory which will comprise of  all provider dependencies. <br>
 ```
 ~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}
 ``` 
@@ -45,15 +47,15 @@ mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
 ```
 For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
 
-6. Run `go build -o terraform-provider-zoom.exe`. This will save the binary (`.exe`) file in the main/root directory. <br>
-7. Run this command to move this binary file to appropriate location.
+2. Run `go build -o terraform-provider-zoom.exe`. This will save the binary (`.exe`) file in the main/root directory. <br>
+3. Run this command to move this binary file to appropriate location.
  ```
  move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\zoom\0.2.0\[OS_ARCH]
  ``` 
 Otherwise you can manually move the file from current directory to destination directory.<br>
 
 
-## Installation
+[OR]
 
 1. Download required binaries <br>
 2. move binary `~/.terraform.d/plugins/[architecture name]/`
