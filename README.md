@@ -7,7 +7,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 
 * [Go](https://golang.org/doc/install) 1.16 <br>
 * [Terraform](https://www.terraform.io/downloads.html) 0.13.x <br/>
-* [Zoom](https://zoom.us/) Pro/Premium account (Token)
+* [Zoom](https://zoom.us/) Pro/Premium account 
 
 
 ### Setup Zoom Account
