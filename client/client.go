@@ -20,6 +20,7 @@ type User struct {
 	Type      int `json:"type"`
 }
 
+
 type NewUser struct {
 	Action   string   `json:"action"`
 	UserInfo UserInfo `json:"user_info"`
@@ -36,6 +37,11 @@ type UpdateUser struct {
 	LastName  string `json:"last_name"`
 }
 
+
+
+
+
+
 var (
     Errors = make(map[int]string)
 )
@@ -47,6 +53,9 @@ func init() {
 	Errors[401] = "Unautharized Access, StatusCode = 401"
 	Errors[429] = "User Has Sent Too Many Request, StatusCode = 429"
 }
+
+
+
 
 type Client struct {
 	authToken  string
@@ -80,6 +89,7 @@ func (c *Client) NewItem(item *User) error {
 
 func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (closer io.ReadCloser, err error) {
 	num := item.Type
+
 	userjson := NewUser{
 		Action: "create",
 		UserInfo: UserInfo{
@@ -97,6 +107,7 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (clos
 	str1 = "Bearer "
 	var str2 string
 	str2 = os.Getenv("ZOOM_TOKEN")
+	//str2 = c.authToken
 	req.Header.Add("Authorization", str1+str2)
 	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
@@ -108,7 +119,9 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (clos
 	if err != nil {
 		log.Println("[ERROR]: ",err)
 		return nil, err
-	}	
+	}
+	
+	
 
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		return resp.Body, nil
@@ -118,10 +131,11 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (clos
 
 }
 
-
 func (c *Client) requestPath() string {
 	return fmt.Sprintf("%s?access_token=%s", "https://api.zoom.us/v2/users", os.Getenv("ZOOM_TOKEN"))
+
 }
+
 
 
 func (c *Client) GetItem(name string) (*User, error) {
@@ -147,6 +161,7 @@ func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (clos
 	}
 	var bearer = "Bearer " + os.Getenv("ZOOM_TOKEN")
 
+	//var bearer = "Bearer " + c.authToken
 	
 	req.Header.Add("Authorization", bearer)
 	client := &http.Client{}
@@ -167,6 +182,8 @@ func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (clos
 
 	return resp.Body, nil
 }
+
+
 
 
 func (c *Client) UpdateItem(item *User) error {
@@ -199,6 +216,7 @@ func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *
 	str1 = "Bearer "
 	var str2 string
 	str2 = os.Getenv("ZOOM_TOKEN")
+	//str2 = c.authToken
 	req.Header.Add("Authorization", str1+str2)
 	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
@@ -217,6 +235,8 @@ func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *
     } else {
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
+
+	
 	return resp.Body, nil
 }
 
@@ -244,10 +264,12 @@ func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (clos
 		return nil, err
 	}
 
+
 	var str1 string
 	str1 = "Bearer "
 	var str2 string
 	str2 = os.Getenv("ZOOM_TOKEN")
+	//str2 = c.authToken
 	req.Header.Add("Authorization", str1+str2)
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -255,18 +277,24 @@ func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (clos
 		return nil, err
 	}
 
+
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		return resp.Body, nil
     } else {
 		log.Println("Broken Request")
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
-}
 
+
+}
 
 func (c *Client) deleterequestPath(path string) string {
 	return fmt.Sprintf("%s/%s", "https://api.zoom.us/v2/users", path)
 }
+
+
+
+
 
 
 func (c *Client) DeactivateUser(userId string, status string) error {
@@ -284,6 +312,7 @@ func (c *Client) DeactivateUser(userId string, status string) error {
 	str1 = "Bearer "
 	var str2 string
 	str2 = os.Getenv("ZOOM_TOKEN")
+	//str2 = c.authToken
 
 	req.Header.Add("content-type", "application/json")
 	req.Header.Add("authorization", str1+str2)
