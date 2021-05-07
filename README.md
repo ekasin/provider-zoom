@@ -28,7 +28,7 @@ git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom
 ``` 
 <br>
 
-2. Add the token generated in the JWT Zoom App to the token field in `main.tf` <br>
+2. Add the API Secret, API Key  generated in the JWT Zoom App to the token field in `main.tf` <br>
 3. Run the following command :
  ```
 go mod init terraform-provider-zoom
