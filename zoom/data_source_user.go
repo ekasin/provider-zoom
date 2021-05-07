@@ -35,6 +35,9 @@ func dataSourceUser() *schema.Resource {
   }
 }
 
+
+
+
 func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
 	apiClient := m.(*client.Client)
   
@@ -54,7 +57,9 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("email", user.EmailId)
 	d.Set("first_name", user.FirstName)
 	d.Set("last_name", user.LastName)
-  d.Set("type",user.Type)
+  	d.Set("type",user.Type)
 
 	return nil
   }
+  
+  
