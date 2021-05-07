@@ -1,9 +1,10 @@
 package client
 
-import (
-	"os"
-	"testing"
+import(
 	"github.com/stretchr/testify/assert"
+	"testing"
+	"os"
+
 )
 
 
@@ -44,11 +45,13 @@ func TestClient_GetItem(t *testing.T) {
 			expectErr:    true,
 			expectedResp: nil,
 		},
+		
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
 			client := NewClient(os.Getenv("ZOOM_TOKEN"))
+
 			item, err := client.GetItem(tc.itemName)
 			if tc.expectErr {
 				assert.Error(t, err)
@@ -107,6 +110,7 @@ func TestClient_NewItem(t *testing.T) {
 		t.Run(tc.testName, func(t *testing.T) {
 			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 
+
 			err := client.NewItem(tc.newItem)
 			if tc.expectErr {
 				assert.Error(t, err)
@@ -118,6 +122,7 @@ func TestClient_NewItem(t *testing.T) {
 		})
 	}
 }
+
 
 
 func TestClient_UpdateItem(t *testing.T) {
@@ -177,6 +182,8 @@ func TestClient_UpdateItem(t *testing.T) {
 }
 
 
+/*
+
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
@@ -197,20 +204,27 @@ func TestClient_DeleteItem(t *testing.T) {
 				},
 			},
 			expectErr: false,
-		},	
+		},
+		
+		
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient(os.Getenv("ZOOM_TOKEN"))
+			client := NewClient("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
+			
 			err := client.DeleteItem(tc.itemName)
 			log.Println(err)
 			if tc.expectErr {
+				//log.Println("[DELETE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			_, err = client.GetItem(tc.itemName)
+			//log.Println("[DELETE ERROR]: ", err)
 			assert.Error(t, err)
 		})
 	}
 }
+
+*/
