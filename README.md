@@ -127,8 +127,8 @@ output "user1" {
 
 * `apikey`     - The Zoom API Key
 * `apisecret`  - The Zoom API Secret
-* `email`      - The email associated with the user account.
-* `first_name` - FIrst name of the User.
+* `email`      - The email id associated with the user account.
+* `first_name` - First name of the User.
 * `last_name`  - Last Name / Family Name / Surname of the User.
 * `status`     - User account activation status.
 * `type`       - User account type. (1=Basic, 2=License, 3=On-prem)
