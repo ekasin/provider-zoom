@@ -71,7 +71,7 @@ type Client struct {
 }
 
 func NewClient(token string) *Client {
-	err := ioutil.WriteFile("acctoken.txt", []byte(token), 0644)
+    err := ioutil.WriteFile("acctoken.txt", []byte(token), 0644)
     if err != nil {
         panic(err)
     }
