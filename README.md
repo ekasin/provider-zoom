@@ -1,6 +1,6 @@
 # Terraform Zoom Provider
 
-This terraform provider allows to perform Create ,Read ,Update, Delete and Deactivate Zoom User(s). 
+This terraform provider allows to perform Create ,Read ,Update, Delete, Import and Deactivate Zoom User(s). 
 
 
 ## Requirements
@@ -10,7 +10,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 * [Zoom](https://zoom.us/) Pro/Premium account 
 
 
-### Setup Zoom Account
+## Setup Zoom Account
  :heavy_exclamation_mark:  [IMPORTANT] : This provider can only be successfully tested on a premium paid zoom account. <br><br>
 
 1. Create a zoom account with paid subscription (PRO Plan/Business Account). (https://zoom.us/)<br>
@@ -21,7 +21,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 This app will provide us with the API Secret, API Key, and token which will be needed to configure our provider and make request. <br>
 
 
-### Initialise Zoom Provider in local machine 
+## Initialise Zoom Provider in local machine 
 1. Clone the repository  to $GOPATH/src/github.com/zoom/terraform-provider-zoom <br>
 2. Add the API Secret, API Key  generated in the JWT Zoom App to respective fields in `main.tf` <br>
 3. Run the following command :
@@ -122,4 +122,29 @@ output "user1" {
   value = data.zoom_user.user1
 }
 ```
+
+## Argument Reference
+
+* `apikey`     - The Zoom API Key
+* `apisecret`  - The Zoom API Secret
+* `email`      - The email associated with the user account.
+* `first_name` - FIrst name of the User.
+* `last_name`  - Last Name / Family Name / Surname of the User.
+* `status`     - User account activation status.
+* `type`       - User account type. (1=Basic, 2=License, 3=On-prem)
+* `id`         - Unique ID of the User which is same as Email ID.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
