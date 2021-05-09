@@ -1,6 +1,6 @@
 # Terraform Zoom Provider
 
-This terraform provider allows to perform Create ,Read ,Update, Delete and Deactivate Zoom User(s). 
+This terraform provider allows to perform Create ,Read ,Update, Delete, Import and Deactivate Zoom User(s). 
 
 
 ## Requirements
@@ -10,7 +10,7 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 * [Zoom](https://zoom.us/) Pro/Premium account 
 
 
-### Setup Zoom Account
+## Setup Zoom Account
  :heavy_exclamation_mark:  [IMPORTANT] : This provider can only be successfully tested on a premium paid zoom account. <br><br>
 
 1. Create a zoom account with paid subscription (PRO Plan/Business Account). (https://zoom.us/)<br>
@@ -21,16 +21,11 @@ This terraform provider allows to perform Create ,Read ,Update, Delete and Deact
 This app will provide us with the API Secret, API Key, and token which will be needed to configure our provider and make request. <br>
 
 
-### Initialise Zoom Provider in local machine 
-1. Clone the repository 
-```
-git clone [RESPOSITORY_GITHUB_LINK] && cd terraform-provider-zoom
-``` 
-<br>
-
-2. Add the API Secret, API Key  generated in the JWT Zoom App to the token field in `main.tf` <br>
+## Initialise Zoom Provider in local machine 
+1. Clone the repository  to $GOPATH/src/github.com/zoom/terraform-provider-zoom <br>
+2. Add the API Secret, API Key  generated in the JWT Zoom App to respective fields in `main.tf` <br>
 3. Run the following command :
- ```
+ ```golang
 go mod init terraform-provider-zoom
 go mod tidy
 ```
@@ -42,15 +37,15 @@ go mod tidy
 ~/.terraform.d/plugins/${host_name}/${namespace}/${type}/${version}/${target}
 ``` 
 Command: 
+```bash
+mkdir -p ~/.terraform.d/plugins/hashicorp.com/edu/zoom/0.2.0/[OS_ARCH]
 ```
-mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/[OS_ARCH]
-```
-For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/zoom/0.2.0/windows_amd64`<br>
+For eg. `mkdir -p ~/.terraform.d/plugins/hashicorp.com/edu/zoom/0.2.0/windows_amd64`<br>
 
 2. Run `go build -o terraform-provider-zoom.exe`. This will save the binary (`.exe`) file in the main/root directory. <br>
 3. Run this command to move this binary file to appropriate location.
  ```
- move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\zoom\0.2.0\[OS_ARCH]
+ move terraform-provider-zoom.exe %APPDATA%\terraform.d\plugins\hashicorp.com\edu\zoom\0.2.0\[OS_ARCH]
  ``` 
 Otherwise you can manually move the file from current directory to destination directory.<br>
 
@@ -64,34 +59,28 @@ Otherwise you can manually move the file from current directory to destination d
 ## Run the Terraform provider
 
 #### Create User
-1. Add the user email, first name, last name in the respective field in `main.tf`
-2. Initialize the terraform provider by the command `terraform init`
+1. Add the user email, first name, last name, status, type in the respective field in `main.tf`
+2. Initialize the terraform provider `terraform init`
 3. Check the changes applicable using `terraform plan` and apply using `terraform apply`
 4. You will see that a user has been successfully created and an account activation mail has been sent to the user.
 5. Activate the account using the link provided in the mail.
 
 #### Update the user
-1. Update the data of the user in the `main.tf` file
-2. Apply the changes using `terraform apply`
-3. You will see that a user data has been successfully updated.
+Update the data of the user in the `main.tf` file and apply using `terraform apply`
 
 #### Read the User Data
-1. Add data and output blocks of the `main.tf` file
-2. Run the command `terraform plan`
-3. This will fetch you all the necessary details of the user.
+Add data and output blocks in the `main.tf` file and run `terraform plan` to read user data
 
-#### Deactivate the user
-1. Change the status of User from activate to `deactivate`.
-2. Run the command `terraform apply`.
+#### Activate/Deactivate the user
+1. Change the status of User from `activate` to `deactivate` or viceversa anf run `terraform apply`.
 
 #### Delete the user
-1. Delete the resource block of the particular user from `main.tf` file 
-2. Run the command `terraform apply`.
+1. Delete the resource block of the particular user from `main.tf` file and run `terraform apply`.
 
 #### Import a User Data
-1. Write manually a resource configuration block for the User in main.tf, to which the imported object will be mapped.
+1. Write manually a resource configuration block for the User in `main.tf`, to which the imported object will be mapped.
 2. Run the command `terraform import zoom_user.user1 [EMAIL_ID]`
-3. Check for the attributes in the `.tfstate` file
+3. Check for the attributes in the `.tfstate` file and fill them accordingly in resource block.
 
 
 ### Testing the Provider
@@ -107,7 +96,7 @@ terraform {
   required_providers {
     zoom = {
       version = "0.2"
-      source  = "hashicorp.com/zoom"
+      source  = "hashicorp.com/edu/zoom"
     }
   }
 }
@@ -133,4 +122,29 @@ output "user1" {
   value = data.zoom_user.user1
 }
 ```
+
+## Argument Reference
+
+* `apikey`     - The Zoom API Key
+* `apisecret`  - The Zoom API Secret
+* `email`      - The email id associated with the user account.
+* `first_name` - First name of the User.
+* `last_name`  - Last Name / Family Name / Surname of the User.
+* `status`     - User account activation status.
+* `type`       - User account type. (1=Basic, 2=License, 3=On-prem)
+* `id`         - Unique ID of the User which is same as Email ID.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
