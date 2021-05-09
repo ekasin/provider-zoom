@@ -72,10 +72,10 @@ Update the data of the user in the `main.tf` file and apply using `terraform app
 Add data and output blocks in the `main.tf` file and run `terraform plan` to read user data
 
 #### Activate/Deactivate the user
-1. Change the status of User from `activate` to `deactivate` or viceversa anf run `terraform apply`.
+Change the status of User from `activate` to `deactivate` or viceversa anf run `terraform apply`.
 
 #### Delete the user
-1. Delete the resource block of the particular user from `main.tf` file and run `terraform apply`.
+Delete the resource block of the particular user from `main.tf` file and run `terraform apply`.
 
 #### Import a User Data
 1. Write manually a resource configuration block for the User in `main.tf`, to which the imported object will be mapped.
