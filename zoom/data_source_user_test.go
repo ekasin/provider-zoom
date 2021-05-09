@@ -3,7 +3,6 @@ package zoom
 import (
 	"fmt"
 	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
@@ -16,7 +15,7 @@ func TestAccUserDataSource_basic(t *testing.T) {
 				Config: testAccUserDataSourceConfig(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"data.zoom_user.user1", "id", "ekansh0786@gmail.com"),
+						"data.zoom_user.user1", "id", "ui17ec38@iiitsurat.ac.in"),
 				),
 			},
 		},
@@ -29,9 +28,10 @@ func testAccUserDataSourceConfig() string {
 		email        = "ui17co15@iitsurat.ac.in"
 		first_name   = "ekansh"
 		last_name    = "singh"
+		type         =  1
 	  }
 	data "zoom_user" "user1" {
-		id = "ekansh0786@gmail.com"
+		id = "ui17ec38@iiitsurat.ac.in"
 	}
 	`)
 }

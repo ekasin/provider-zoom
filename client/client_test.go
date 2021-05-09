@@ -1,37 +1,83 @@
 package client
 
 import(
-	"terraform-provider-zoom/server"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"os"
+	"io/ioutil"
+	"log"
 )
 
+func init(){
+	file, err := os.Open("../acctoken.txt")
+    if err != nil {
+        log.Fatal(err)
+    }
+	token, err := ioutil.ReadAll(file)
+	os.Setenv("ZOOM_TOKEN", string(token))
+}
 
 func TestClient_GetItem(t *testing.T) {
 	testCases := []struct {
 		testName     string
 		itemName     string
-		seedData     map[string]server.Item
+		seedData     map[string]User
 		expectErr    bool
-		expectedResp *server.Item
+		expectedResp *User
 	}{
 		{
 			testName: "user exists",
 			itemName: "tapendrasingh66@gmail.com",
-			seedData: map[string]server.Item{
+			seedData: map[string]User{
 				"ekansh0786@gmail.com": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-					EmailId:   "tapendrasingh66@gmail.com",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 				},
 			},
 			expectErr: false,
-			expectedResp: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-				EmailId:   "tapendrasingh66@gmail.com",
-				FirstName: "tapendra",
-				LastName:  "singh",
+			expectedResp: &User{
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 			},
 		},
 		
@@ -44,10 +90,9 @@ func TestClient_GetItem(t *testing.T) {
 		},
 		
 	}
-
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 
 			item, err := client.GetItem(tc.itemName)
 			if tc.expectErr {
@@ -60,44 +105,92 @@ func TestClient_GetItem(t *testing.T) {
 	}
 }
 
-
-
-/////////////////////////////////////////////////////////////////////
-
-
-
 func TestClient_NewItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
-		newItem   *server.Item
-		seedData  map[string]server.Item
+		newItem   *User
+		seedData  map[string]User
 		expectErr bool
 	}{
 		{
 			testName: "success",
-			newItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-				EmailId:   "tapendrasingh66@gmail.com",
-				FirstName: "tapendra",
-				LastName:  "singh",
+			newItem: &User{
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 			},
 			seedData:  nil,
 			expectErr: false,
 		},
 		{
 			testName: "item already exists",
-			newItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-				EmailId:   "tapendrasingh66@gmail.com",
-				FirstName: "tapendra",
-				LastName:  "singh",
-			},
-			seedData: map[string]server.Item{
-				"item1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-					EmailId:   "tapendrasingh66@gmail.com",
+			newItem: &User{
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false,  
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
+			},
+			seedData: map[string]User{
+				"item1": {
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
+					FirstName: "tapendra",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false,  
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 				},
 			},
 			expectErr: true,
@@ -107,61 +200,106 @@ func TestClient_NewItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
-
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 
 			err := client.NewItem(tc.newItem)
 			if tc.expectErr {
 				assert.Error(t, err)
 				return
 			}
-			item, err := client.GetItem(tc.newItem.EmailId)
+			item, err := client.GetItem(tc.newItem.Email)
 			assert.NoError(t, err)
 			assert.Equal(t, tc.newItem, item)
 		})
 	}
 }
 
-
-
-/////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////update//////////////////////////////////////
-
-
 func TestClient_UpdateItem(t *testing.T) {
 	testCases := []struct {
 		testName    string
-		updatedItem *server.Item
-		seedData    map[string]server.Item
+		updatedItem *User
+		seedData    map[string]User
 		expectErr   bool
 	}{
 		{
 			testName: "item exists",
-			updatedItem: &server.Item{
-				Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-					EmailId:   "tapendrasingh66@gmail.com",
+			updatedItem: &User{
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 			},
-			seedData: map[string]server.Item{
+			seedData: map[string]User{
 				"item1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-					EmailId:   "tapendrasingh66@gmail.com",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 				},
 			},
 			expectErr: false,
 		},
 		{
 			testName: "item does not exist",
-			updatedItem: &server.Item{
-				Id :       "dfhjjddfjsd",
-				EmailId:   "ui17ec38@iitsurat.ac.in",
-				FirstName: "ekansh",
-				LastName:  "rock",
+			updatedItem: &User{
+					Id :       "dfhjjddfjsd",
+					Email:   "ui17ec38@iitsurat.ac.in",
+					FirstName: "ekansh",
+					LastName:  "rock",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false, 
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 			},
 			seedData:  nil,
 			expectErr: true,
@@ -170,46 +308,53 @@ func TestClient_UpdateItem(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 			err := client.UpdateItem(tc.updatedItem)
 			if tc.expectErr {
 				assert.Error(t, err)
 				return
 			}
-			item, err := client.GetItem(tc.updatedItem.EmailId)
+			item, err := client.GetItem(tc.updatedItem.Email)
 			assert.NoError(t, err)
 			assert.Equal(t, tc.updatedItem, item)
 		})
 	}
 }
 
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////Delete Testing/////////////////////////
-
-/*
-
 func TestClient_DeleteItem(t *testing.T) {
 	testCases := []struct {
 		testName  string
 		itemName  string
-		seedData  map[string]server.User
+		seedData  map[string]User
 		expectErr bool
 	}{
 		{
 			testName: "user exists",
-			itemName: "tapendrakmr786@gmail.com",
-			seedData: map[string]server.User{
+			itemName: "tapendrasingh66@gmail.com",
+			seedData: map[string]User{
 				"user1": {
-					Id:        "vtDZ-fJqRwqRHoOBVKoYhg",
-					EmailId:   "tapendrasingh66@gmail.com",
+					Id:        "qPinZDw3TJG6_6eZfiYpJQ",
+					Email:   "tapendrasingh66@gmail.com",
 					FirstName: "tapendra",
-					LastName:  "singh",
+					LastName:  "kumar",
+					Type:        1,
+					RoleName:"Member", 
+					Pmi:0, 
+					UsePmi:false,  
+					TimeZone:"", 
+					Verified:0, 
+					Dept:"", 
+					HostKey:"817947", 
+					CmsUserId:"", 
+					Jid:"qpinzdw3tjg6_6ezfiypjq@xmpp.zoom.us", 
+					AccountId:"A69TdkyzQfCbkmDHAjIOWA", 
+					Language:"", 
+					PhoneCountry:"", 
+					PhoneNumber:"", 
+					Status:"active", 
+					JobTitle:"", 
+					Location:"", 
+					RoleId:"2",
 				},
 			},
 			expectErr: false,
@@ -217,25 +362,21 @@ func TestClient_DeleteItem(t *testing.T) {
 		
 		
 	}
-
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			client := NewClient("https://api.zoom.us/v2/users", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6ImxOR0pCSGp1Uk9PRktDTTY4TGpIMGciLCJleHAiOjE2MTkyOTI4NTMsImlhdCI6MTYxODY4ODA1M30.lRrdfygWH8pgGcm0l4H3MCO1Uma7NGQ-r1TnobrQL-E")
-			
+			client := NewClient(os.Getenv("ZOOM_TOKEN"))
 			err := client.DeleteItem(tc.itemName)
 			log.Println(err)
 			if tc.expectErr {
-				//log.Println("[DELETE ERROR]: ", err)
+				log.Println("[DELETE ERROR]: ", err)
 				assert.Error(t, err)
 				return
 			}
 			_, err = client.GetItem(tc.itemName)
-			//log.Println("[DELETE ERROR]: ", err)
+			log.Println("[DELETE ERROR]: ", err)
 			assert.Error(t, err)
 		})
 	}
 }
 
-*/
 
-//////////////////////////////////////////////////////////////////

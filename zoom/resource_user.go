@@ -1,16 +1,14 @@
 package zoom
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"regexp"
-	"strings"
 	"terraform-provider-zoom/client"
-	"terraform-provider-zoom/server"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"strings"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"fmt"
+	"regexp"
+	"log"
+	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 )
 
 func validateName(v interface{}, k string) (ws []string, es []error) {
@@ -34,6 +32,7 @@ func validateName(v interface{}, k string) (ws []string, es []error) {
 	}
 	return
 }
+
 func validateEmail(v interface{}, k string) (ws []string, es []error) {
 	var errs []error
 	var warns []string
@@ -46,7 +45,6 @@ func validateEmail(v interface{}, k string) (ws []string, es []error) {
 		return warns, errs
 	}
 	return
-
 }
 
 func resourceUser() *schema.Resource {
@@ -61,87 +59,182 @@ func resourceUser() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 
 			"email": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "emailId of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Required:    true,
 				ValidateFunc: validateEmail,
 			},
 			"first_name": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "first name of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Required:    true,
 				ValidateFunc: validateName,
 			},
 			"last_name": &schema.Schema{
-				Type:         schema.TypeString,
-				Description:  "last name of new user",
-				Required:     true,
+				Type:        schema.TypeString,
+				Required:    true,
 				ValidateFunc: validateName,
 			},
 			"status": &schema.Schema{
 				Type:        schema.TypeString,
-				Description: "Status of user",
-				Optional:    true,
+				Optional :   true,
 			},
 			"id": &schema.Schema{
+				Type:        schema.TypeString,
+				Computed :   true,
+			},
+			"type": &schema.Schema{
+				Type:        schema.TypeInt,
+				Required:    true,
+			},
+			"role_name": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
+				Optional :   true,
 			},
+			"pmi": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+				Optional :   true,
+			},
+			"use_pmi": &schema.Schema{
+				Type:     schema.TypeBool,
+				Computed: true,
+				Optional :   true,
+			},
+			  "personal_meeting_url": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "timezone": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "verified": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "dept": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "host_key": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "cms_user_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "jid": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "account_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "language": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "phone_country": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "phone_number": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "job_title": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "location": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
+			  "role_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Optional :   true,
+			  },
 		},
 	}
-
 }
 
-func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
+func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
-
-	user := server.Item{
-		EmailId:   d.Get("email").(string),
+	user := client.User{
+		Email:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
+		Type:      d.Get("type").(int),
 	}
-
 	err := apiClient.NewItem(&user)
-
 	if err != nil {
-		log.Println("[ERROR]: ", err)
+		log.Println("[ERROR]: ",err)
 		return diag.FromErr(err)
 	}
-	d.SetId(user.EmailId)
-	resourceUserRead(ctx, d, m)
+	d.SetId(user.Email)
+	resourceUserRead(ctx,d,m)
 	return diags
 }
 
-func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
+func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
-
 	userId := d.Id()
 	user, err := apiClient.GetItem(userId)
-
 	if err != nil {
-		log.Println("[ERROR]: ", err)
+		log.Println("[ERROR]: ",err)
 		if strings.Contains(err.Error(), "not found") {
 			d.SetId("")
 		} else {
 			return diag.FromErr(err)
 		}
 	}
-
-	if len(user.EmailId) > 0 {
-		d.SetId(user.EmailId)
-		d.Set("email", user.EmailId)
+	if len(user.Email) > 0{
+		d.SetId(user.Email)
+		d.Set("email", user.Email)
+		d.Set("id", user.Id)
 		d.Set("first_name", user.FirstName)
 		d.Set("last_name", user.LastName)
+		d.Set("type", user.Type)
+		d.Set("role_name", user.RoleName)
+		d.Set("pmi", user.Pmi)
+		d.Set("use_pmi", user.UsePmi)
+		d.Set("timezone", user.TimeZone)
+		d.Set("verified", user.Verified)
+		d.Set("dept", user.Dept)
+		d.Set("host_key", user.HostKey)
+		d.Set("cms_user_id", user.CmsUserId)
+		d.Set("jid", user.Jid)
+		d.Set("account_id", user.AccountId)
+		d.Set("language", user.Language)
+		d.Set("phone_country", user.PhoneCountry)
+		d.Set("phone_number", user.PhoneNumber)
+		d.Set("status", user.Status)
+		d.Set("job_title", user.JobTitle)
+		d.Set("location", user.Location)
+		d.Set("role_id", user.RoleId)
 	}
-
 	return diags
 }
 
-func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var _ diag.Diagnostics
 	apiClient := m.(*client.Client)
 	var diags diag.Diagnostics
@@ -154,30 +247,26 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface
 
 		return diags
 	}
-	user := server.Item{
-		EmailId:   d.Get("email").(string),
+	user := client.User{
+		Email:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
 	}
-
 	status := d.Get("status").(string)
-	errDeac := apiClient.DeactivateUser(user.EmailId, status)
+	errDeac := apiClient.DeactivateUser(user.Email, status)
 	log.Println(errDeac)
-
 	err := apiClient.UpdateItem(&user)
 	if err != nil {
 		log.Printf("[Error] Error updating user :%s", err)
 		return diag.FromErr(err)
 	}
-	return resourceUserRead(ctx, d, m)
+	return resourceUserRead(ctx,d,m)
 }
 
-func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserDelete(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	apiClient := m.(*client.Client)
-
 	userId := d.Id()
-
 	err := apiClient.DeleteItem(userId)
 	if err != nil {
 		log.Printf("[Error] Error deleting user :%s", err)
@@ -186,3 +275,4 @@ func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface
 	d.SetId("")
 	return diags
 }
+

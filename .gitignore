@@ -1,0 +1,10 @@
+.terraform/*
+vendor/
+terraform.tfstate*
+.gitignore
+.terraform.lock.hcl
+.makefile
+makefile
+acctoken.txt
+client/acctoken.txt
+zoom/acctoken.txt

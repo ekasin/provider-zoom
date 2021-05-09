@@ -7,11 +7,51 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	"terraform-provider-zoom/server"
-	"os"
 	"log"
+	"io/ioutil"
 )
 
+type NewUser struct {
+	Action   string   `json:"action"`
+	UserInfo UserInfo `json:"user_info"`
+}
+
+type UserInfo struct {
+	Email   string `json:"email"`
+	Type      int    `json:"type"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+type UpdateUser struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
+type User struct {
+	Id        string `json:id`  
+	Email	  string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Type      int `json:"type"`
+	RoleName  string `json:"role_name"`
+	Pmi       int `json:"pmi"`
+	UsePmi    bool `json:"use_pmi"`
+	TimeZone  string `json:"timezone"`
+	Verified  int `json:"verified"`
+	Dept      string `json:"dept"`
+	HostKey  string `json:"host_key"`
+	CmsUserId  string `json:"cms_user_id"`
+	Jid  string `json:"jid"`
+	AccountId  string `json:"account_id"`
+	Language  string `json:"language"`
+	PhoneCountry  string `json:"phone_country"`
+	PhoneNumber  string `json:"phone_number"`
+	Status  string `json:"status"`
+	JobTitle  string `json:"job_title"`
+	Location  string `json:"location"`
+	RoleId  string `json:"role_id"`
+}
 
 var (
     Errors = make(map[int]string)
@@ -25,27 +65,23 @@ func init() {
 	Errors[429] = "User Has Sent Too Many Request, StatusCode = 429"
 }
 
-
-
-// Client -
 type Client struct {
-	hostname   string
 	authToken  string
 	httpClient *http.Client
 }
 
-
-
-// NewClient -
-func NewClient(hostname string, token string) *Client {
+func NewClient(token string) *Client {
+    err := ioutil.WriteFile("acctoken.txt", []byte(token), 0644)
+    if err != nil {
+        panic(err)
+    }
 	return &Client{
-		hostname:   hostname,
 		authToken:  token,
 		httpClient: &http.Client{},
 	}
 }
 
-func (c *Client) NewItem(item *server.Item) error {
+func (c *Client) NewItem(item *User) error {
 	buf := bytes.Buffer{}
 	err := json.NewEncoder(&buf).Encode(item)
 	if err != nil {
@@ -60,20 +96,46 @@ func (c *Client) NewItem(item *server.Item) error {
 	return nil
 }
 
+func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (closer io.ReadCloser, err error) {
 
+	userjson := NewUser{
+		Action: "create",
+		UserInfo: UserInfo{
+			Email:   item.Email,
+			Type:    item.Type,
+			FirstName: item.FirstName,
+			LastName:  item.LastName,
+		},
+	}
+	reqjson, _ := json.Marshal(userjson)
+	payload := strings.NewReader(string(reqjson))
+	req, err := http.NewRequest(method, fmt.Sprintf("%s?access_token=%s", "https://api.zoom.us/v2/users", c.authToken), payload)
+	authtoken := "Bearer "+c.authToken
+	req.Header.Add("Authorization", authtoken)
+	req.Header.Add("Content-Type", "application/json")
+	if err != nil {
+		log.Println("[ERROR]: ",err)
+		return nil, err
+	}
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		log.Println("[ERROR]: ",err)
+		return nil, err
+	}
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		return resp.Body, nil
+    } else {
+		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
+    }
+}
 
-
-///////////////////////////////////////////////////Get User//////////////////////////////////////////////////////////////////////
-
-
-
-func (c *Client) GetItem(name string) (*server.Item, error) {
+func (c *Client) GetItem(name string) (*User, error) {
 	body, err := c.gethttpRequest(fmt.Sprintf("%v", name), "GET", bytes.Buffer{})
 	if err != nil {
 		log.Println("[READ ERROR]: ", err)
 		return nil, err
 	}
-	item := &server.Item{}
+	item := &User{}
 	err = json.NewDecoder(body).Decode(item)
 	if err != nil {
 		log.Println("[READ ERROR]: ", err)
@@ -88,17 +150,14 @@ func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (clos
 		log.Println("[ERROR]: ", err)
 		return nil, err
 	}
-	var bearer = "Bearer " + os.Getenv("ZOOM_TOKEN")
-
-	
-	req.Header.Add("Authorization", bearer)
+	authtoken := "Bearer "+c.authToken
+	req.Header.Add("Authorization", authtoken)
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("[ERROR]: ",err)
 		return nil, err
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
@@ -107,35 +166,17 @@ func (c *Client) gethttpRequest(emailid, method string, body bytes.Buffer) (clos
 		}
 		return nil, fmt.Errorf("Error : %v ", Errors[resp.StatusCode])
 	}
-
 	return resp.Body, nil
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////update////////////////////////////////////////////////////////////////////////////////////////////
-
-
-func (c *Client) UpdateItem(item *server.Item) error {
+func (c *Client) UpdateItem(item *User) error {
 	buf := bytes.Buffer{}
 	err := json.NewEncoder(&buf).Encode(item)
 	if err != nil {
 		log.Println("[UPDATE ERROR]: ", err)
 		return err
 	}
-	_, err = c.updatehttpRequest(fmt.Sprintf("%s", item.EmailId), "PATCH", buf,item)
+	_, err = c.updatehttpRequest(fmt.Sprintf("%s", item.Email), "PATCH", buf,item)
 	if err != nil {
 		log.Println("[UPDATE ERROR]: ", err)
 		return err
@@ -143,55 +184,33 @@ func (c *Client) UpdateItem(item *server.Item) error {
 	return nil
 }
 
-
-func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *server.Item) (closer io.ReadCloser, err error) {
-
-	updateuserjson := server.UpdateUser{
+func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *User) (closer io.ReadCloser, err error) {
+	updateuserjson := UpdateUser{
 		FirstName: item.FirstName,
 		LastName:  item.LastName,
 	}
 	updatejson, _ := json.Marshal(updateuserjson)
 	payload := strings.NewReader(string(updatejson))
-
-	req, err := http.NewRequest(method, c.updaterequestPath(path), payload)
-	var str1 string
-	str1 = "Bearer "
-	var str2 string
-	str2 = os.Getenv("ZOOM_TOKEN")
-	req.Header.Add("Authorization", str1+str2)
+	req, err := http.NewRequest(method, fmt.Sprintf("%s/%s","https://api.zoom.us/v2/users", path), payload)
+	authtoken := "Bearer "+c.authToken
+	req.Header.Add("Authorization", authtoken)
 	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		log.Println("[ERROR]: ", err)
 		return nil, err
 	}
-
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Println("[ERROR]: ", err)
 		return nil, err
 	}
-
 	if resp.StatusCode >= 200 && resp.StatusCode <= 400 {
 		return resp.Body, nil
     } else {
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
-
-	
 	return resp.Body, nil
 }
-
-
-func (c *Client) updaterequestPath(path string) string {
-	return fmt.Sprintf("%s/%s",os.Getenv("ZOOM_ADDRESS"), path)
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////Delete/////////////////////////////////
 
 func (c *Client) DeleteItem(userId string) error {
 	_, err := c.deletehttpRequest(fmt.Sprintf("%s", userId), "DELETE", bytes.Buffer{})
@@ -202,116 +221,40 @@ func (c *Client) DeleteItem(userId string) error {
 	return nil
 }
 
-
 func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
-	req, err := http.NewRequest(method, c.deleterequestPath(path), &body)
+	req, err := http.NewRequest(method,fmt.Sprintf("%s/%s", "https://api.zoom.us/v2/users", path), &body)
 	if err != nil {
 		log.Println("[DELETE ERROR]: ", err)
 		return nil, err
 	}
-
-
-	var str1 string
-	str1 = "Bearer "
-	var str2 string
-	str2 = os.Getenv("ZOOM_TOKEN")
-	req.Header.Add("Authorization", str1+str2)
+	authtoken := "Bearer "+c.authToken
+	req.Header.Add("Authorization", authtoken)
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		log.Println("[DELETE ERROR]: ", err)
 		return nil, err
 	}
-
-
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		return resp.Body, nil
     } else {
 		log.Println("Broken Request")
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
-
-
 }
 
-func (c *Client) deleterequestPath(path string) string {
-	return fmt.Sprintf("%s/%s", os.Getenv("ZOOM_ADDRESS"), path)
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-func (c *Client) httpRequest(method string, body bytes.Buffer, item *server.Item) (closer io.ReadCloser, err error) {
-	
-
-	userjson := server.NewUser{
-		Action: "create",
-		UserInfo: server.UserInfo{
-			EmailId:   item.EmailId,
-			Type:      1,
-			FirstName: item.FirstName,
-			LastName:  item.LastName,
-		},
-	}
-	reqjson, _ := json.Marshal(userjson)
-	payload := strings.NewReader(string(reqjson))
-
-	req, err := http.NewRequest(method, c.requestPath(), payload)
-	var str1 string
-	str1 = "Bearer "
-	var str2 string
-	str2 = os.Getenv("ZOOM_TOKEN")
-	req.Header.Add("Authorization", str1+str2)
-	req.Header.Add("Content-Type", "application/json")
-	if err != nil {
-		log.Println("[ERROR]: ",err)
-		return nil, err
-	}
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		log.Println("[ERROR]: ",err)
-		return nil, err
-	}
-	
-	
-
-	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
-		return resp.Body, nil
-    } else {
-		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
-    }
-
-}
-
-func (c *Client) requestPath() string {
-	return fmt.Sprintf("%s?access_token=%s", os.Getenv("ZOOM_ADDRESS"), os.Getenv("ZOOM_TOKEN"))
-
-}
-
-
-
-///////Deactivate///////////////////////////
-// Deactivate user
 func (c *Client) DeactivateUser(userId string, status string) error {
 	log.Println("Changing Status of User : ", userId)
 	url := fmt.Sprintf("https://api.zoom.us/v2/users/%s/status", userId)
 	data := fmt.Sprintf("{\"action\":\"%s\"}", status)
 	payload := strings.NewReader(data)
-
 	req, err := http.NewRequest("PUT", url, payload)
 	if err != nil {
 		log.Println("[DEACTIVATE/ACTIVATE ERROR]: ",err)
 		return nil
 	}
-	var str1 string
-	str1 = "Bearer "
-	var str2 string
-	str2 = os.Getenv("ZOOM_TOKEN")
-
+	authtoken := "Bearer "+c.authToken
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", str1+str2)
+	req.Header.Add("authorization", authtoken)
 	_, err = c.httpClient.Do(req)
 	if err != nil {
 		log.Println("[DEACTIVATE/ACTIVATE ERROR]: ",err)
