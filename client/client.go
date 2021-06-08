@@ -9,7 +9,22 @@ import (
 	"strings"
 	"log"
 	"io/ioutil"
+	
 )
+
+type User struct {
+	Id        string `json:"id"`
+	Email   string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Status    string  `json:"status"`
+	Type      int `json:"type"`
+	Pmi       int `json:"pmi"`
+	RoleName    string `json:"role_name"`
+	Department    string `json:"dept"`
+	JobTitle    string `json:"job_title"`
+	Location    string `json:"location"`
+}
 
 type NewUser struct {
 	Action   string   `json:"action"`
@@ -26,31 +41,10 @@ type UserInfo struct {
 type UpdateUser struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-}
-
-type User struct {
-	Id        string `json:id`  
-	Email	  string `json:"email"`
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
 	Type      int `json:"type"`
-	RoleName  string `json:"role_name"`
-	Pmi       int `json:"pmi"`
-	UsePmi    bool `json:"use_pmi"`
-	TimeZone  string `json:"timezone"`
-	Verified  int `json:"verified"`
-	Dept      string `json:"dept"`
-	HostKey  string `json:"host_key"`
-	CmsUserId  string `json:"cms_user_id"`
-	Jid  string `json:"jid"`
-	AccountId  string `json:"account_id"`
-	Language  string `json:"language"`
-	PhoneCountry  string `json:"phone_country"`
-	PhoneNumber  string `json:"phone_number"`
-	Status  string `json:"status"`
-	JobTitle  string `json:"job_title"`
-	Location  string `json:"location"`
-	RoleId  string `json:"role_id"`
+	Department    string `json:"dept"`
+	JobTitle    string `json:"job_title"`
+	Location    string `json:"location"`
 }
 
 var (
@@ -71,7 +65,7 @@ type Client struct {
 }
 
 func NewClient(token string) *Client {
-    err := ioutil.WriteFile("acctoken.txt", []byte(token), 0644)
+	err := ioutil.WriteFile("acctoken.txt", []byte(token), 0644)
     if err != nil {
         panic(err)
     }
@@ -127,6 +121,7 @@ func (c *Client) httpRequest(method string, body bytes.Buffer, item *User) (clos
     } else {
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
+
 }
 
 func (c *Client) GetItem(name string) (*User, error) {
@@ -188,6 +183,10 @@ func (c *Client) updatehttpRequest(path,method string, body bytes.Buffer, item *
 	updateuserjson := UpdateUser{
 		FirstName: item.FirstName,
 		LastName:  item.LastName,
+		Type:  item.Type,
+		Department: item.Department,
+		JobTitle:  item.JobTitle,
+		Location:  item.Location,
 	}
 	updatejson, _ := json.Marshal(updateuserjson)
 	payload := strings.NewReader(string(updatejson))
@@ -240,6 +239,8 @@ func (c *Client) deletehttpRequest(path, method string, body bytes.Buffer) (clos
 		log.Println("Broken Request")
 		return nil, fmt.Errorf("Error : %v",Errors[resp.StatusCode] )
     }
+
+
 }
 
 func (c *Client) DeactivateUser(userId string, status string) error {
