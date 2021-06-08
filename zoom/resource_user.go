@@ -45,6 +45,7 @@ func validateEmail(v interface{}, k string) (ws []string, es []error) {
 		return warns, errs
 	}
 	return
+
 }
 
 func resourceUser() *schema.Resource {
@@ -81,97 +82,34 @@ func resourceUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed :   true,
 			},
-			"type": &schema.Schema{
+			"license_type": &schema.Schema{
 				Type:        schema.TypeInt,
 				Required:    true,
 			},
-			"role_name": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			},
 			"pmi": &schema.Schema{
-				Type:     schema.TypeInt,
-				Computed: true,
-				Optional :   true,
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
-			"use_pmi": &schema.Schema{
-				Type:     schema.TypeBool,
-				Computed: true,
-				Optional :   true,
+			"role_name": &schema.Schema{
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
-			  "personal_meeting_url": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "timezone": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "verified": &schema.Schema{
-				Type:     schema.TypeInt,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "dept": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "host_key": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "cms_user_id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "jid": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "account_id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "language": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "phone_country": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "phone_number": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "job_title": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "location": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
-			  "role_id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-				Optional :   true,
-			  },
+			"department": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"job_title": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"location": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+
 		},
 	}
+
 }
 
 func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -181,7 +119,7 @@ func resourceUserCreate(ctx context.Context,d *schema.ResourceData, m interface{
 		Email:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
-		Type:      d.Get("type").(int),
+		Type:      d.Get("license_type").(int),
 	}
 	err := apiClient.NewItem(&user)
 	if err != nil {
@@ -209,27 +147,15 @@ func resourceUserRead(ctx context.Context,d *schema.ResourceData, m interface{})
 	if len(user.Email) > 0{
 		d.SetId(user.Email)
 		d.Set("email", user.Email)
-		d.Set("id", user.Id)
 		d.Set("first_name", user.FirstName)
 		d.Set("last_name", user.LastName)
-		d.Set("type", user.Type)
+		d.Set("license_type", user.Type)
+		d.Set("pmi",user.Pmi)
+		d.Set("status",user.Status)
 		d.Set("role_name", user.RoleName)
-		d.Set("pmi", user.Pmi)
-		d.Set("use_pmi", user.UsePmi)
-		d.Set("timezone", user.TimeZone)
-		d.Set("verified", user.Verified)
-		d.Set("dept", user.Dept)
-		d.Set("host_key", user.HostKey)
-		d.Set("cms_user_id", user.CmsUserId)
-		d.Set("jid", user.Jid)
-		d.Set("account_id", user.AccountId)
-		d.Set("language", user.Language)
-		d.Set("phone_country", user.PhoneCountry)
-		d.Set("phone_number", user.PhoneNumber)
-		d.Set("status", user.Status)
+		d.Set("department",user.Department)
 		d.Set("job_title", user.JobTitle)
 		d.Set("location", user.Location)
-		d.Set("role_id", user.RoleId)
 	}
 	return diags
 }
@@ -251,6 +177,10 @@ func resourceUserUpdate(ctx context.Context,d *schema.ResourceData, m interface{
 		Email:   d.Get("email").(string),
 		FirstName: d.Get("first_name").(string),
 		LastName:  d.Get("last_name").(string),
+		Type:  d.Get("license_type").(int),
+		Department:  d.Get("department").(string),
+		JobTitle:  d.Get("job_title").(string),
+		Location:  d.Get("location").(string),
 	}
 	status := d.Get("status").(string)
 	errDeac := apiClient.DeactivateUser(user.Email, status)
