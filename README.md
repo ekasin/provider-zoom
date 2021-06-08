@@ -125,14 +125,19 @@ output "user1" {
 
 ## Argument Reference
 
-* `apikey`     - The Zoom API Key
-* `apisecret`  - The Zoom API Secret
-* `email`      - The email id associated with the user account.
-* `first_name` - First name of the User.
-* `last_name`  - Last Name / Family Name / Surname of the User.
-* `status`     - User account activation status.
-* `type`       - User account type. (1=Basic, 2=License, 3=On-prem)
-* `id`         - Unique ID of the User which is same as Email ID.
+* `apikey`(Required)     - The Zoom API Key
+* `apisecret`(Required)  - The Zoom API Secret
+* `email`(Required)      - The email id associated with the user account.
+* `first_name`(Required) - First name of the User.
+* `last_name`(Required)  - Last Name / Family Name / Surname of the User.
+* `status`(Optional)     - User account activation status.
+* `license_type`(Required)       - User account type. (1=Basic, 2=License, 3=On-prem)
+* `job_title`(Optional)         - Job title of the particular user.
+* `department`(Optional)         - Department of the particular user.
+* `location`(Optional)         - Department of the particular user.
+* `id`(Computed)         - Unique ID of the User which is same as Email ID.
+* `pmi`(Computed)         - Generated pmi no of the user.
+* `role_name`(Computed)         - Current role of the user .(Admin,Member).
 
 
 
