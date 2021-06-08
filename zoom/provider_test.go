@@ -5,19 +5,13 @@ import(
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"testing"
 	"log"
-	"io/ioutil"
 )
 
 var testAccProviders map[string]*schema.Provider
 var testAccProvider *schema.Provider
 
 func init() {
-	file, err := os.Open("../acctoken.txt")
-    if err != nil {
-        log.Fatal(err)
-    }
-	token, err := ioutil.ReadAll(file)
-	os.Setenv("ZOOM_TOKEN", string(token))
+	os.Setenv("ZOOM_TOKEN", "")
 	testAccProvider = Provider()
 	testAccProviders = map[string]*schema.Provider{
 		"zoom": testAccProvider,
