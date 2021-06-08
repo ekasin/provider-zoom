@@ -136,7 +136,7 @@ output "user1" {
 * `department`(Optional,string)         - Department of the particular user.
 * `location`(Optional,string)         - Department of the particular user.
 * `id`(Computed,string)         - Unique ID of the User which is same as Email ID.
-* `pmi`(Computed,string)         - Generated pmi no of the user.
+* `pmi`(Computed,integer)         - Generated pmi no of the user.
 * `role_name`(Computed,string)         - Current role of the user ie.(Admin,Member).
 
 
