@@ -125,19 +125,19 @@ output "user1" {
 
 ## Argument Reference
 
-* `apikey`(Required)     - The Zoom API Key
-* `apisecret`(Required)  - The Zoom API Secret
-* `email`(Required)      - The email id associated with the user account.
-* `first_name`(Required) - First name of the User.
-* `last_name`(Required)  - Last Name / Family Name / Surname of the User.
-* `status`(Optional)     - User account activation status.
-* `license_type`(Required)       - User account type. (1=Basic, 2=License, 3=On-prem)
-* `job_title`(Optional)         - Job title of the particular user.
-* `department`(Optional)         - Department of the particular user.
-* `location`(Optional)         - Department of the particular user.
-* `id`(Computed)         - Unique ID of the User which is same as Email ID.
-* `pmi`(Computed)         - Generated pmi no of the user.
-* `role_name`(Computed)         - Current role of the user .(Admin,Member).
+* `apikey`(Required,string)     - The Zoom API Key
+* `apisecret`(Required,string)  - The Zoom API Secret
+* `email`(Required,string)      - The email id associated with the user account.
+* `first_name`(Required,string) - First name of the User.
+* `last_name`(Required,string)  - Last Name / Family Name / Surname of the User.
+* `status`(Optional,string)     - User account activation status ie.(activate,deactivate).
+* `license_type`(Required,integer)       - User account type ie.(1=Basic, 2=License, 3=On-prem)
+* `job_title`(Optional,string)         - Job title of the particular user.
+* `department`(Optional,string)         - Department of the particular user.
+* `location`(Optional,string)         - Department of the particular user.
+* `id`(Computed,string)         - Unique ID of the User which is same as Email ID.
+* `pmi`(Computed,string)         - Generated pmi no of the user.
+* `role_name`(Computed,string)         - Current role of the user ie.(Admin,Member).
 
 
 
