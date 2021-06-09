@@ -13,11 +13,13 @@ func Provider() *schema.Provider {
 				Type:      schema.TypeString,
 				Optional:  true,
 				Sensitive: true,
+				DefaultFunc: schema.EnvDefaultFunc("API_SECRET", ""),
 			},
 			"apikey": &schema.Schema{
 				Type:      schema.TypeString,
 				Optional:  true,
 				Sensitive: true,
+				DefaultFunc: schema.EnvDefaultFunc("API_KEY", ""),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
