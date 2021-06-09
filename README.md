@@ -111,7 +111,10 @@ resource "zoom_user" "user1" {
    first_name = "[USER_FIRST_NAME]"
    last_name  = "[USER_LAST_NAME]"
    status = "activate"
-   type = [INTEGER VALUE]
+   license_type = [INTEGER VALUE]
+   department = "[USER_DEPARTMENT]"
+   job_title = "[USER_JOB_TITLE]"
+   location   =  "[USER_LOCATION]"
 }
 
 data "zoom_user" "user1" {
