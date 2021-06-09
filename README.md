@@ -59,11 +59,12 @@ Otherwise you can manually move the file from current directory to destination d
 ## Working with terraform
 
 #### Create User
-1. Add the user email, first name, last name, status, type in the respective field in `main.tf`
-2. Initialize the terraform provider `terraform init`
-3. Check the changes applicable using `terraform plan` and apply using `terraform apply`
-4. You will see that a user has been successfully created and an account activation mail has been sent to the user.
-5. Activate the account using the link provided in the mail.
+1. Add the user email, first name, last name, status, license_type,deartment,job_title,location in the respective field in `main.tf`
+2. set API_SECRET and API_KEY.
+3. Initialize the terraform provider `terraform init`
+4. Check the changes applicable using `terraform plan` and apply using `terraform apply`
+5. You will see that a user has been successfully created and an account activation mail has been sent to the user.
+6. Activate the account using the link provided in the mail.
 
 #### Update the user
 Update the data of the user in the `main.tf` file and apply using `terraform apply`
